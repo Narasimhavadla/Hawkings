@@ -1,6 +1,6 @@
 function Footer() {
   return (
-    <Footer className="w-full bg-gradient-to-r from-[#0f172a] to-[#020617] text-white h-48">
+    <div className="w-full bg-gradient-to-r from-[#0f172a] to-[#020617] text-white h-48">
       
       
       <div className="max-w-7xl mx-auto px-6 py-6">
@@ -50,7 +50,7 @@ function Footer() {
 
         </div>
       </div>
-    </Footer>
+    </div>
   );
 }
 
