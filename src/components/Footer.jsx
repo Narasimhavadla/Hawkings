@@ -1,8 +1,8 @@
-function Foooter() {
+function Footer() {
   return (
-    <footer className="w-full bg-gradient-to-r from-[#0f172a] to-[#020617] text-white h-48">
+    <Footer className="w-full bg-gradient-to-r from-[#0f172a] to-[#020617] text-white h-48">
       
-      {/* Top Links */}
+      
       <div className="max-w-7xl mx-auto px-6 py-6">
         <div className="flex flex-col md:flex-row justify-center md:justify-between items-center gap-4 text-sm md:text-base">
           
@@ -17,7 +17,7 @@ function Foooter() {
               Registration
             </a>
             <a href="/contact" className="hover:text-purple-400 transition">
-              Contact
+              Contact us
             </a>
           </div>
         </div>
@@ -50,7 +50,7 @@ function Foooter() {
 
         </div>
       </div>
-    </footer>
+    </Footer>
   );
 }
 

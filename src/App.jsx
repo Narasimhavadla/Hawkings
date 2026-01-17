@@ -1,11 +1,9 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import { Route,Routes } from 'react-router-dom'
 import LandingPage from './pages/landingPage'
 import Navbar from './components/Navbar'
-import Foooter from './components/Footer'
+import Footer from './components/Footer'
 // import AdminLandingPage from './admin/adminLandingPage'
 import AdminLayout from './admin/AdminLayout'
 import Aboutus from './pages/aboutus'
@@ -30,7 +28,7 @@ function App() {
 
         </Routes>
 
-      <Foooter />
+      <Footer />
     </div>
   )
 }
