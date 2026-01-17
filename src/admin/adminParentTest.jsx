@@ -8,8 +8,8 @@ import {
   faTrash,
   faSleigh,
 } from "@fortawesome/free-solid-svg-icons";
-import EditParentTestimonialModal from "../components/editParentTestModal";
-import DeleteParentTestimonialModal from "../components/deleteParentTestModal";
+import EditParentTestimonialModal from "../components/EditParentTestModal";
+import DeleteParentTestimonialModal from "../components/DeleteParentTestModal";
 import AddParentTestimonialModal from "../components/AddParentTestModal";
 
 function AdminParentTest() {
