@@ -5,7 +5,7 @@ import './App.css'
 import { Route,Routes } from 'react-router-dom'
 import LandingPage from './pages/landingPage'
 import Navbar from './components/Navbar'
-import Footer from './components/footer'
+import Foooter from './components/Footer'
 // import AdminLandingPage from './admin/adminLandingPage'
 import AdminLayout from './admin/AdminLayout'
 import Aboutus from './pages/aboutus'
@@ -30,7 +30,7 @@ function App() {
 
         </Routes>
 
-      <Footer />
+      <Foooter />
     </div>
   )
 }
