@@ -1,150 +1,95 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { toast, ToastContainer } from "react-toastify";
 
-function EditStudentModal({ onClose }) {
+
+const API_URL = "http://localhost:3000/students";
+
+function EditStudentModal({ onClose, student, refresh }) {
+  const [form, setForm] = useState({
+    id: "",
+    name: "",
+    class: "",
+    email: "",
+    phone: "",
+    state: "",
+    city: "",
+    institute: "",
+    status: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+  if (student) {
+    setForm({ ...student }); // ✅ COPY FULL OBJECT
+  }
+}, [student])
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleUpdate = async () => {
+    try {
+      setLoading(true);
+
+      await axios.put(`${API_URL}/${student.id}`, {
+        ...form,
+        id : form.id
+      });
+      //     setTimeout(() => {
+      //   toast.success("Updated Successfully 🎉");
+      // }, 2000);
+
+      refresh();
+      onClose();
+        toast.success("Updated Successfully 🎉");
+
+    } catch (error) {
+      console.error(error);
+      // alert("Failed to update student");
+      toast.error("Failed to Updated")
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center ">
-      {/* Overlay */}
-      <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm "
-        onClick={onClose}
-      />
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="bg-white w-[95%] max-w-5xl rounded-2xl shadow-xl">
 
-      {/* Modal */}
-      <div className="relative bg-white w-[95%] max-w-5xl rounded-2xl shadow-2xl animate-scaleIn h-[75vh] md:h-auto overflow-hidden overflow-y-auto">
         {/* Header */}
-        <div className="flex justify-between items-center px-6 py-4 border-b">
-          <h2 className="text-xl font-semibold text-gray-800">
-            Edit Student
-          </h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-700"
-          >
-            <FontAwesomeIcon icon={faXmark} size="lg" />
+        <div className="flex justify-between px-6 py-4 border-b">
+          <h2 className="text-xl font-semibold">Edit Student</h2>
+          <button onClick={onClose}>
+            <FontAwesomeIcon icon={faXmark} />
           </button>
         </div>
 
-        {/* Form */}
-        <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-5">
-          {/* Class */}
-          <div>
-            <label className="text-sm font-medium text-gray-600 mb-1 block">
-              Class *
-            </label>
-            <select className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500">
-              <option>Class 5</option>
-              <option>Class 6</option>
-              <option>Class 7</option>
-              <option>Class 8</option>
-              <option>Class 9</option>
-              <option>Class 10</option>
-            </select>
-          </div>
-
-          {/* Name */}
-          <div>
-            <label className="text-sm font-medium text-gray-600 mb-1 block">
-              Student Name *
-            </label>
-            <input
-              type="text"
-              className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-
-          {/* Father Name */}
-          <div>
-            <label className="text-sm font-medium text-gray-600 mb-1 block">
-              Father Name *
-            </label>
-            <input className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500" />
-          </div>
-
-          {/* Email */}
-          <div>
-            <label className="text-sm font-medium text-gray-600 mb-1 block">
-              Email *
-            </label>
-            <input className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500" />
-          </div>
-
-          {/* Phone */}
-          <div>
-            <label className="text-sm font-medium text-gray-600 mb-1 block">
-              Phone Number *
-            </label>
-            <input className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500" />
-          </div>
-
-          {/* Alternate Phone */}
-          <div>
-            <label className="text-sm font-medium text-gray-600 mb-1 block">
-              Alternate Phone
-            </label>
-            <input className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500" />
-          </div>
-
-          {/* DOB */}
-          <div>
-            <label className="text-sm font-medium text-gray-600 mb-1 block">
-              Date of Birth *
-            </label>
-            <input
-              type="date"
-              className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-
-          {/* Institute */}
-          <div>
-            <label className="text-sm font-medium text-gray-600 mb-1 block">
-              Institute Name *
-            </label>
-            <input className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500" />
-          </div>
-
-          {/* State */}
-          <div>
-            <label className="text-sm font-medium text-gray-600 mb-1 block">
-              State *
-            </label>
-            <select className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500">
-              <option>Telangana</option>
-              <option>Andhra Pradesh</option>
-              <option>Karnataka</option>
-              <option>Kerala</option>
-              <option>Tamil Nadu</option>
-            </select>
-          </div>
-
-          {/* City */}
-          <div>
-            <label className="text-sm font-medium text-gray-600 mb-1 block">
-              City *
-            </label>
-            <input className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500" />
-          </div>
-
-          {/* Pincode */}
-          <div>
-            <label className="text-sm font-medium text-gray-600 mb-1 block">
-              Pin Code *
-            </label>
-            <input className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500" />
-          </div>
+        {/* Body */}
+        <div className="p-6 grid md:grid-cols-3 gap-4">
+          <input name="name" value={form.name} onChange={handleChange} />
+          <input name="class" value={form.class} onChange={handleChange} />
+          <input name="email" value={form.email} onChange={handleChange} />
+          <input name="phone" value={form.phone} onChange={handleChange} />
+          <input name="state" value={form.state} onChange={handleChange} />
+          <input name="city" value={form.city} onChange={handleChange} />
+          <input name="institute" value={form.institute} onChange={handleChange} />
+          <input name="status" value={form.status} onChange={handleChange} />
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end gap-4 px-6 py-4 border-t bg-gray-50 rounded-b-2xl">
+        <div className="flex justify-end gap-4 px-6 py-4 border-t">
+          <button onClick={onClose}>Cancel</button>
           <button
-            onClick={onClose}
-            className="px-5 py-2 font-semibold text-gray-700 hover:bg-gray-200 rounded-lg"
+            onClick={handleUpdate}
+            disabled={loading}
+            className="bg-indigo-600 text-white px-6 py-2 rounded"
           >
-            Cancel
-          </button>
-          <button className="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 shadow">
-            Save
+            {loading ? "Saving..." : "Save"}
           </button>
         </div>
       </div>
@@ -153,4 +98,3 @@ function EditStudentModal({ onClose }) {
 }
 
 export default EditStudentModal;
-

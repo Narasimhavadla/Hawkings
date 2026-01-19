@@ -7,7 +7,7 @@ function Footer() {
         <div className="flex flex-col md:flex-row justify-center md:justify-between items-center gap-4 text-sm md:text-base">
           
           <div className="flex flex-wrap justify-center gap-6">
-            <a href="#" className="hover:text-purple-400 transition">
+            <a href="/" className="hover:text-purple-400 transition">
               Maths competition details
             </a>
             <a href="/aboutus" className="hover:text-purple-400 transition">

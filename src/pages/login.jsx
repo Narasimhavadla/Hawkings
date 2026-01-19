@@ -7,6 +7,7 @@ import {
   faEyeSlash,
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -18,22 +19,56 @@ export default function Login() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError("");
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
 
-    if (
-      formData.username === "admin" &&
-      formData.password === "12345"
-    ) {
-      navigate("/admin"); // dummy redirect
-    } else {
-      setError("Invalid username or password");
+    try {
+      const res = await axios.get("http://localhost:3000/users", {
+        params: {
+          username: formData.username,
+          password: formData.password,
+        },
+      });
+
+      if (res.data.length === 0) {
+        setError("Invalid username or password");
+        setLoading(false);
+        return;
+      }
+
+      const loggedInUser = res.data[0];
+
+      // Store user info (no JWT)
+      localStorage.setItem(
+        "authUser",
+        JSON.stringify({
+          id: loggedInUser.id,
+          username: loggedInUser.username,
+          role: loggedInUser.role,
+        })
+      );
+
+      // Role based redirect
+      if (loggedInUser.role === "superadmin") {
+        navigate("/admin");
+      } else if (loggedInUser.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
+    } catch (err) {
+      setError("Server error. Please try again later.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -46,7 +81,7 @@ export default function Login() {
         {/* Title */}
         <div className="text-center mb-6">
           <h1 className="text-2xl font-extrabold text-indigo-700">
-            Admin Login
+            Login
           </h1>
           <p className="text-sm text-gray-500 mt-1">
             Enter your credentials to access dashboard
@@ -74,6 +109,7 @@ export default function Login() {
                 onChange={handleChange}
                 className="w-full h-11 border rounded-lg pl-10 pr-3
                            focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                required
               />
             </div>
           </div>
@@ -96,6 +132,7 @@ export default function Login() {
                 onChange={handleChange}
                 className="w-full h-11 border rounded-lg pl-10 pr-10
                            focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                required
               />
               <button
                 type="button"
@@ -117,11 +154,12 @@ export default function Login() {
           {/* Login Button */}
           <button
             type="submit"
-            className="w-full py-3 bg-indigo-600 text-white font-semibold 
-                       rounded-lg hover:bg-indigo-700 
-                       active:scale-95 transition"
+            disabled={loading}
+            className={`w-full py-3 text-white font-semibold rounded-lg
+              ${loading ? "bg-indigo-400 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700"}
+              active:scale-95 transition`}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
 
         </form>
@@ -130,8 +168,8 @@ export default function Login() {
         <div className="mt-6 text-center text-xs text-gray-500">
           <p>Demo Credentials</p>
           <p className="mt-1">
-            <span className="font-semibold">Username:</span> admin |
-            <span className="font-semibold ml-1">Password:</span> 12345
+            user / admin / superadmin <br />
+            <span className="font-semibold">Password:</span> 12345
           </p>
         </div>
 

@@ -4,7 +4,8 @@ import {
   faUserGraduate,
   faCalendarDays,
   faComments,
-  faCommentDots
+  faCommentDots,
+  faUser
 } from "@fortawesome/free-solid-svg-icons";
 
 const Sidebar = ({ activeTab, setActiveTab }) => {
@@ -14,6 +15,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
     { id: "exam", label: "Exam Schedule", icon: faCalendarDays },
     { id: "parent", label: "Parent Testimonials", icon: faComments },
     { id: "student", label: "Student Testimonials", icon: faCommentDots },
+    { id: "AddAdmin", label: "Add Admin", icon: faUser },
   ];
 
   return (

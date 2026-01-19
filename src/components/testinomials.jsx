@@ -163,7 +163,7 @@ export default function Testimonials() {
       {/* Parent Testimonials */}
       <section className="max-w-6xl mx-auto px-6">
         <h2 className="text-2xl font-bold mb-8 text-center">
-          👨‍👩‍👧 Parent Testimonials
+           Parent Testimonials
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
@@ -177,7 +177,7 @@ export default function Testimonials() {
       {/* Student Testimonials */}
       <section className="max-w-6xl mx-auto px-6 mb-20 mt-14">
         <h2 className="text-2xl font-bold mb-8 text-center">
-          🎒 Student Testimonials
+          Student Testimonials
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">

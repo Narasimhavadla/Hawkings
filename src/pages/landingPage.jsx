@@ -1,6 +1,9 @@
 import React from "react";
 import olympiadImg from "../assets/banner.png";
 import Testimonials from "../components/testinomials";
+import RewardsSection from "../components/RewardsSection";
+import ExamScheduleComp from "../components/examSchedComp";
+import ClassApplySection from "../components/syllabusComp";
 
 function LandingPage() {
   return (
@@ -133,6 +136,10 @@ function LandingPage() {
         </div>
 
       </div>
+      
+      <RewardsSection />
+      <ExamScheduleComp />
+      <ClassApplySection />
 
       {/* testinomials */}
 

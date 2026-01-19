@@ -7,6 +7,7 @@ import AdminParentTest from "./adminParentTest";
 import AdminStuTest from "./adminStuTest";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
+import AddAdmin from "../superAdmin/addAdmin";
 
 const AdminLayout = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -22,6 +23,8 @@ const AdminLayout = () => {
         return <AdminParentTest />;
       case "student":
         return <AdminStuTest />;
+      case "AddAdmin":
+        return <AddAdmin />;
       default:
         return <Dashboard />;
     }

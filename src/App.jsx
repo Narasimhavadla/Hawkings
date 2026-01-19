@@ -10,6 +10,8 @@ import Aboutus from './pages/aboutus'
 import MathsCompReg from './pages/mathsCompReg'
 import ContactPage from './pages/contactPage'
 import Login from './pages/login'
+
+
 function App() {
   const [count, setCount] = useState(0)
 
