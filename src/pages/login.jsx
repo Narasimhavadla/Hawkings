@@ -32,41 +32,55 @@ export default function Login() {
     setError("");
 
     try {
-      const res = await axios.get("http://localhost:3000/users", {
-        params: {
-          username: formData.username || "admin",
-          password: formData.password || "12345",
-        },
-      });
+      const res = await axios.post(
+        "http://localhost:3000/api/v1/login",
+        {
+          username: formData.username,
+          password: formData.password,
+        }
+      );
 
-      if (res.data.length === 0) {
-        setError("Invalid username or password");
-        setLoading(false);
-        return;
-      }
+      const { token, user } = res.data;
+      const loginTime = new Date().toISOString();
 
-      const loggedInUser = res.data[0];
-
-      // Store user info (no JWT)
+      // Store JWT + user info
+      localStorage.setItem("token", token);
       localStorage.setItem(
         "authUser",
         JSON.stringify({
-          id: loggedInUser.id,
-          username: loggedInUser.username,
-          role: loggedInUser.role,
+          id: user.id,
+          username: user.username,
+          role: user.role,
+          loginTime
         })
       );
 
-      // Role based redirect
-      if (loggedInUser.role === "superadmin" ) {
-        navigate("/admin");
-      } else if (loggedInUser.role === "admin" || loggedInUser.username == "admin" && loggedInUser.password == "12345") {
+      const activities =
+      JSON.parse(localStorage.getItem("userActivities")) || [];
+
+    activities.push({
+      username: user.username,
+      role: user.role,
+      loginTime,
+      logoutTime: null
+    });
+    localStorage.setItem(
+      "userActivities",
+      JSON.stringify(activities)
+    );
+
+      // Role-based redirect
+      if (user.role === "superadmin" || user.role === "admin") {
         navigate("/admin");
       } else {
         navigate("/");
       }
     } catch (err) {
-      setError("Server error. Please try again later.");
+      if (err.response?.status === 401) {
+        setError("Invalid username or password");
+      } else {
+        setError("Server error. Please try again later.");
+      }
     } finally {
       setLoading(false);
     }
@@ -155,7 +169,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-3 text-white font-semibold rounded-lg
+            className={`w-full py-3 text-white font-semibold rounded-lg mb-12 mt-4
               ${loading ? "bg-indigo-400 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700"}
               active:scale-95 transition`}
           >
@@ -164,14 +178,7 @@ export default function Login() {
 
         </form>
 
-        {/* Demo Credentials */}
-        <div className="mt-6 text-center text-xs text-gray-500">
-          <p>Demo Credentials</p>
-          <p className="mt-1">
-            user / admin / superadmin <br />
-            <span className="font-semibold">Password:</span> 12345
-          </p>
-        </div>
+       
 
       </div>
     </div>

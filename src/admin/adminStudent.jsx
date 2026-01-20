@@ -42,8 +42,8 @@ function AdminStudent() {
     try {
       setLoading(true);
       setError(null);
-      const res = await axios.get("http://localhost:3000/students");
-      setStudents(res.data);
+      const res = await axios.get("http://localhost:3000/api/v1/student");
+      setStudents(res.data.data);
     } catch (err) {
       console.error(err);
       setError("Failed to load students");
@@ -69,7 +69,7 @@ function AdminStudent() {
 
     // Status filter
     if (statusFilter !== "all") {
-      data = data.filter((s) => s.status === statusFilter);
+      data = data.filter((s) => s.Status === statusFilter);
     }
 
     return data;
@@ -133,6 +133,7 @@ function AdminStudent() {
 
         <div className="flex flex-wrap items-center gap-3">
           {/* Items per page */}
+          <p>per page</p>
           <select
             value={itemsPerPage}
             onChange={(e) => {
@@ -158,7 +159,7 @@ function AdminStudent() {
           >
             <option value="all">All Status</option>
             <option value="pending">Pending</option>
-            <option value="Completed">Completed</option>
+            <option value="completed">Completed</option>
           </select>
 
           <button
@@ -214,7 +215,7 @@ function AdminStudent() {
                   <FontAwesomeIcon
                     icon={faCircle}
                     className={
-                      s.status === "pending"
+                      s.Status === "pending"
                         ? "text-orange-500"
                         : "text-green-500"
                     }

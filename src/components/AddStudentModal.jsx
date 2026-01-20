@@ -8,24 +8,28 @@ import {
   faPhone,
   faSchool,
   faLocationDot,
+  faCalendar
 } from "@fortawesome/free-solid-svg-icons";
+import { toast } from "react-toastify";
 
-import {toast} from "react-toastify"
-
-const API_URL = "http://localhost:3000/students";
+const API_URL = "http://localhost:3000/api/v1/student";
 
 export default function AddStudentModal({ onClose, refresh }) {
   const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
+    Class: "",
     name: "",
-    class: "",
+    fathername: "",
     email: "",
     phone: "",
+    altphone: "",
+    dob: "",
+    institute: "",
     state: "",
     city: "",
-    institute: "",
-    status: "pending",
+    pincode: "",
+    Status: "pending",
   });
 
   const handleChange = (e) => {
@@ -36,12 +40,12 @@ export default function AddStudentModal({ onClose, refresh }) {
     try {
       setLoading(true);
       await axios.post(API_URL, form);
-      refresh(); 
+      toast.success("Student Added Successfully");
+      refresh();
       onClose();
-      toast.success("Student Added");
     } catch (error) {
       console.error(error);
-      toast.error("Failed to Add")
+      toast.error("Failed to Add Student");
     } finally {
       setLoading(false);
     }
@@ -49,7 +53,8 @@ export default function AddStudentModal({ onClose, refresh }) {
 
   return (
     <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center px-4">
-      <div className="bg-white w-full max-w-4xl rounded-2xl shadow-xl">
+      <div className="bg-white w-full max-w-4xl rounded-2xl shadow-xl h-3/4 overflow-hidden overflow-y-auto">
+
         {/* Header */}
         <div className="flex justify-between px-6 py-4 border-b">
           <h2 className="text-xl font-semibold">Add Student</h2>
@@ -59,34 +64,46 @@ export default function AddStudentModal({ onClose, refresh }) {
         </div>
 
         {/* Body */}
-        <div className="p-6 grid md:grid-cols-2 gap-6">
+        <div className="p-6 grid md:grid-cols-3 gap-6 ">
+
           <Input label="Student Name" name="name" icon={faUser} onChange={handleChange} />
-          {/* <Input label="Class" name="class" onChange={handleChange} /> */}
-          
-          <select
-            // label = ""
-            name="Class"
-            value={form.class}
-            onChange={handleChange}
-            className="border rounded-lg h-11 px-3 "
-          >
-            <option value="class-4">class-4</option>
-            <option value="class-5">class-5</option>
-            <option value="class-4">class-6</option>
-            <option value="class-4">class-7</option>
-            <option value="class-4">class-8</option>
-            <option value="class-4">class-9</option>
-            
-          </select>
-          <Input label="Email" name="email" icon={faEnvelope} onChange={handleChange} />
-          <Input label="Phone" name="phone" icon={faPhone} onChange={handleChange} />
-          <Input label="State" name="state" icon={faLocationDot} onChange={handleChange} />
-          <Input label="City" name="city" onChange={handleChange} />
-          <Input label="Institute" name="institute" icon={faSchool} onChange={handleChange} />
+          <Input label="Father Name" name="fathername" icon={faUser} onChange={handleChange} />
 
           <select
-            name="status"
-            value={form.status}
+            name="Class"
+            value={form.Class}
+            onChange={handleChange}
+            className="border rounded-lg h-11 px-3"
+          >
+            <option value="">Select Class</option>
+            <option value="class-4">Class 4</option>
+            <option value="class-5">Class 5</option>
+            <option value="class-6">Class 6</option>
+            <option value="class-7">Class 7</option>
+            <option value="class-8">Class 8</option>
+            <option value="class-9">Class 9</option>
+          </select>
+
+          <Input label="Email" name="email" icon={faEnvelope} onChange={handleChange} />
+          <Input label="Phone" name="phone" icon={faPhone} onChange={handleChange} />
+          <Input label="Alternate Phone" name="altphone" icon={faPhone} onChange={handleChange} />
+
+          <Input
+            label="Date of Birth"
+            name="dob"
+            type="date"
+            icon={faCalendar}
+            onChange={handleChange}
+          />
+
+          <Input label="Institute" name="institute" icon={faSchool} onChange={handleChange} />
+          <Input label="State" name="state" icon={faLocationDot} onChange={handleChange} />
+          <Input label="City" name="city" onChange={handleChange} />
+          <Input label="Pincode" name="pincode" onChange={handleChange} />
+
+          <select
+            name="Status"
+            value={form.Status}
             onChange={handleChange}
             className="border rounded-lg h-11 px-3"
           >
@@ -94,6 +111,7 @@ export default function AddStudentModal({ onClose, refresh }) {
             <option value="completed">Completed</option>
             <option value="rejected">Rejected</option>
           </select>
+
         </div>
 
         {/* Footer */}
@@ -107,12 +125,13 @@ export default function AddStudentModal({ onClose, refresh }) {
             {loading ? "Saving..." : "Save Student"}
           </button>
         </div>
+
       </div>
     </div>
   );
 }
 
-function Input({ label, icon, name, onChange }) {
+function Input({ label, icon, name, onChange, type = "text" }) {
   return (
     <div>
       <label className="text-sm">{label}</label>
@@ -124,6 +143,7 @@ function Input({ label, icon, name, onChange }) {
           />
         )}
         <input
+          type={type}
           name={name}
           onChange={onChange}
           className={`w-full h-11 border rounded-lg px-3 ${icon ? "pl-9" : ""}`}

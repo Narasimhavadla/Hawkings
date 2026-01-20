@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -7,13 +7,43 @@ import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
 
 function Navbar() {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const authUser = JSON.parse(localStorage.getItem("authUser"));
+
+  const handleLogout = () => {
+    const activities =
+      JSON.parse(localStorage.getItem("userActivities")) || [];
+
+    // update logout time
+    if (authUser) {
+      for (let i = activities.length - 1; i >= 0; i--) {
+        if (
+          activities[i].username === authUser.username &&
+          activities[i].logoutTime === null
+        ) {
+          activities[i].logoutTime = new Date().toISOString();
+          break;
+        }
+      }
+
+      localStorage.setItem(
+        "userActivities",
+        JSON.stringify(activities)
+      );
+    }
+
+    localStorage.removeItem("authUser");
+    localStorage.removeItem("token");
+
+    navigate("/", { replace: true });
+  };
 
   const navItems = [
     { name: "Maths Competition Details", path: "/" },
     { name: "About Us", path: "/aboutus" },
     { name: "Registration", path: "/maths-competetion-registration" },
     { name: "Contact", path: "/contact" },
-    { name: "Login", path: "/login" },
   ];
 
   return (
@@ -22,6 +52,7 @@ function Navbar() {
 
         <img src={logo} alt="Logo" className="w-36 md:w-40" />
 
+        {/* Desktop Menu */}
         <div className="hidden md:flex gap-6 text-[#F2FFFF] text-lg">
           {navItems.map((item) => (
             <NavLink
@@ -39,6 +70,23 @@ function Navbar() {
               {item.name}
             </NavLink>
           ))}
+
+          {/* LOGIN / LOGOUT */}
+          {authUser ? (
+            <button
+              onClick={handleLogout}
+              className="px-4 py-2 bg-red-600 rounded hover:bg-red-700 transition font-bold"
+            >
+              Logout
+            </button>
+          ) : (
+            <NavLink
+              to="/login"
+              className="px-4 py-2 bg-green-600 rounded hover:bg-green-700 transition font-bold"
+            >
+              Login
+            </NavLink>
+          )}
         </div>
 
         {/* Mobile Hamburger */}
@@ -52,7 +100,7 @@ function Navbar() {
 
       {/* Mobile Menu */}
       <div
-        className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out
+        className={`md:hidden overflow-hidden transition-all duration-500
         ${open ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}
       >
         <div className="flex flex-col bg-[#111827] text-white px-6 py-4 gap-4">
@@ -61,14 +109,31 @@ function Navbar() {
               key={item.path}
               to={item.path}
               onClick={() => setOpen(false)}
-              className={({ isActive }) =>
-                `text-left px-4 py-3 rounded transition-all duration-300
-                ${isActive ? "bg-blue-700" : "hover:bg-blue-800"}`
-              }
+              className="px-4 py-3 rounded hover:bg-blue-800"
             >
               {item.name}
             </NavLink>
           ))}
+
+          {authUser ? (
+            <button
+              onClick={() => {
+                setOpen(false);
+                handleLogout();
+              }}
+              className="px-4 py-3 bg-red-600 rounded"
+            >
+              Logout
+            </button>
+          ) : (
+            <NavLink
+              to="/login"
+              onClick={() => setOpen(false)}
+              className="px-4 py-3 bg-green-600 rounded"
+            >
+              Login
+            </NavLink>
+          )}
         </div>
       </div>
     </nav>

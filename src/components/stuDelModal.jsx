@@ -6,7 +6,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import{toast} from 'react-toastify'
 
-const API_URL = "http://localhost:3000/students";
+const API_URL = "http://localhost:3000/api/v1/student";
 
 function StuDeleteModal({ onClose, studentId, refresh }) {
   const handleDelete = async () => {

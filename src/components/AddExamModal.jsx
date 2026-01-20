@@ -1,7 +1,66 @@
+import { useState } from "react";
+import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faCalendarPlus } from "@fortawesome/free-solid-svg-icons";
 
-function AddExamScheduleModal({ onClose, onSave }) {
+function AddExamScheduleModal({ onClose, onSuccess }) {
+  const [formData, setFormData] = useState({
+    name: "",
+    year: "",
+    status: "active",
+    lastRegistrationDate: "",
+    onlineExamDate: "",
+    onlineExamResultDate: "",
+    onlineLiveInterviewDate: "",
+    finalResultDate: "",
+    amount: "",
+    examFormat: "online",
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setError("");
+  };
+
+  const handleSave = async () => {
+    const {
+      name,
+      year,
+      status,
+      lastRegistrationDate,
+      amount,
+    } = formData;
+
+    // 🔴 Required field validation
+    if (!name || !year || !status || !lastRegistrationDate || !amount) {
+      setError("Please fill all required fields");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const res = await axios.post(
+        "http://localhost:3000/api/v1/exam-schedule",
+        formData
+      );
+
+      if (res.data.status) {
+        onSuccess?.(); // refresh list
+        onClose();
+      }
+    } catch (err) {
+      setError(
+        err.response?.data?.message || "Failed to create exam schedule"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Overlay */}
@@ -11,152 +70,98 @@ function AddExamScheduleModal({ onClose, onSave }) {
       />
 
       {/* Modal */}
-      <div
-        className="
-          relative bg-white w-[95%] max-w-5xl rounded-2xl shadow-2xl
-          max-h-[75vh] overflow-y-auto
-        "
-      >
+      <div className="relative bg-white w-[95%] max-w-5xl rounded-2xl shadow-2xl max-h-[75vh] overflow-y-auto">
         {/* Header */}
         <div className="sticky top-0 bg-white z-10 flex justify-between items-center px-6 py-4 border-b">
           <div className="flex items-center gap-2">
-            <FontAwesomeIcon
-              icon={faCalendarPlus}
-              className="text-indigo-600 text-lg"
-            />
-            <h2 className="text-xl font-semibold text-gray-800">
-              Add Exam Schedule
-            </h2>
+            <FontAwesomeIcon icon={faCalendarPlus} className="text-indigo-600" />
+            <h2 className="text-xl font-semibold">Add Exam Schedule</h2>
           </div>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-700"
-          >
+          <button onClick={onClose}>
             <FontAwesomeIcon icon={faXmark} size="lg" />
           </button>
         </div>
 
+        {/* Error */}
+        {error && (
+          <div className="mx-6 mt-4 bg-red-50 text-red-600 px-4 py-2 rounded-lg">
+            {error}
+          </div>
+        )}
+
         {/* Form */}
         <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {/* Exam Name */}
-          <div>
-            <label className="text-sm font-medium text-gray-600 mb-1 block">
-              Exam Name *
-            </label>
-            <input
-              type="text"
-              placeholder="Enter exam name"
-              className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-
-          {/* Year */}
-          <div>
-            <label className="text-sm font-medium text-gray-600 mb-1 block">
-              Year *
-            </label>
-            <input
-              type="number"
-              placeholder="2025"
-              className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-
-          {/* Registration Date */}
-          <div>
-            <label className="text-sm font-medium text-gray-600 mb-1 block">
-              Registration Last Date *
-            </label>
-            <input
-              type="date"
-              className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-
-          {/* Online Exam Date */}
-          <div>
-            <label className="text-sm font-medium text-gray-600 mb-1 block">
-              Online Exam Date *
-            </label>
-            <input
-              type="date"
-              className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-
-          {/* Exam Result Date */}
-          <div>
-            <label className="text-sm font-medium text-gray-600 mb-1 block">
-              Online Exam Result Date *
-            </label>
-            <input
-              type="date"
-              className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-
-          {/* Interview Date */}
-          <div>
-            <label className="text-sm font-medium text-gray-600 mb-1 block">
-              Online Interview Date
-            </label>
-            <input
-              type="date"
-              className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-
-          {/* Final Result Date */}
-          <div>
-            <label className="text-sm font-medium text-gray-600 mb-1 block">
-              Final Result Date *
-            </label>
-            <input
-              type="date"
-              className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-
-          {/* Amount */}
-          <div>
-            <label className="text-sm font-medium text-gray-600 mb-1 block">
-              Amount (₹) *
-            </label>
-            <input
-              type="number"
-              placeholder="100"
-              className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
+          <Input label="Exam Name *" name="name" value={formData.name} onChange={handleChange} />
+          <Input label="Year *" type="number" name="year" value={formData.year} onChange={handleChange} />
+          <Input label="Registration Last Date *" type="date" name="lastRegistrationDate" value={formData.lastRegistrationDate} onChange={handleChange} />
+          <Input label="Online Exam Date" type="date" name="onlineExamDate" value={formData.onlineExamDate} onChange={handleChange} />
+          <Input label="Online Exam Result Date" type="date" name="onlineExamResultDate" value={formData.onlineExamResultDate} onChange={handleChange} />
+          <Input label="Online Interview Date" type="date" name="onlineLiveInterviewDate" value={formData.onlineLiveInterviewDate} onChange={handleChange} />
+          <Input label="Final Result Date" type="date" name="finalResultDate" value={formData.finalResultDate} onChange={handleChange} />
+          <Input label="Amount (₹) *" type="number" name="amount" value={formData.amount} onChange={handleChange} />
 
           {/* Status */}
           <div>
             <label className="text-sm font-medium text-gray-600 mb-1 block">
               Status *
             </label>
-            <select className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500">
+            <select
+              name="status"
+              value={formData.status}
+              onChange={handleChange}
+              className="w-full border rounded-lg px-3 py-2"
+            >
               <option value="active">Active</option>
               <option value="inactive">Inactive</option>
+            </select>
+          </div>
+
+          {/* Exam Format */}
+          <div>
+            <label className="text-sm font-medium text-gray-600 mb-1 block">
+              Exam Format
+            </label>
+            <select
+              name="examFormat"
+              value={formData.examFormat}
+              onChange={handleChange}
+              className="w-full border rounded-lg px-3 py-2"
+            >
+              <option value="online">Online</option>
+              <option value="offline">Offline</option>
             </select>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="sticky bottom-0 bg-gray-50 border-t px-6 py-4 flex justify-end gap-4 rounded-b-2xl">
-          <button
-            onClick={onClose}
-            className="px-5 py-2 font-semibold text-gray-700 hover:bg-gray-200 rounded-lg"
-          >
+        <div className="sticky bottom-0 bg-gray-50 border-t px-6 py-4 flex justify-end gap-4">
+          <button onClick={onClose} className="px-5 py-2">
             Cancel
           </button>
           <button
-            onClick={onSave}
-            className="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 shadow"
+            onClick={handleSave}
+            disabled={loading}
+            className="px-6 py-2 bg-indigo-600 text-white rounded-lg disabled:opacity-50"
           >
-            Save Exam
+            {loading ? "Saving..." : "Save Exam"}
           </button>
         </div>
       </div>
+    </div>
+  );
+}
+
+/* 🔹 Reusable Input Component */
+function Input({ label, ...props }) {
+  return (
+    <div>
+      <label className="text-sm font-medium text-gray-600 mb-1 block">
+        {label}
+      </label>
+      <input
+        {...props}
+        className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500"
+      />
     </div>
   );
 }

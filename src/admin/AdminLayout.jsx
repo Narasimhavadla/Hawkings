@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Dashboard from "./dashboard";
 import AdminStudent from "./adminStudent";
@@ -8,10 +9,35 @@ import AdminStuTest from "./adminStuTest";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import AddAdmin from "../superAdmin/addAdmin";
+import UserActivities from "../superAdmin/userActivity";
 
 const AdminLayout = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const navigate = useNavigate();
+
+  // ✅ Read auth user
+  const authUser = JSON.parse(localStorage.getItem("authUser"));
+  const token = localStorage.getItem("token");
+
+  /* 🔐 AUTH + BACK BUTTON PROTECTION */
+  useEffect(() => {
+    // Not logged in
+    if (!authUser || !token) {
+      navigate("/login", { replace: true });
+    }
+
+    // Block browser back button
+    window.history.pushState(null, "", window.location.href);
+    window.onpopstate = () => {
+      navigate("/login", { replace: true });
+    };
+
+    return () => {
+      window.onpopstate = null;
+    };
+  }, [authUser, token, navigate]);
 
   const renderComponent = () => {
     switch (activeTab) {
@@ -23,8 +49,21 @@ const AdminLayout = () => {
         return <AdminParentTest />;
       case "student":
         return <AdminStuTest />;
+
+      // 🛡 Super Admin protection
       case "AddAdmin":
-        return <AddAdmin />;
+        return authUser?.role === "superadmin" ? (
+          <AddAdmin />
+        ) : (
+          <Dashboard />
+        );
+         case "userActivity":
+        return authUser?.role === "superadmin" ? (
+          <UserActivities />
+        ) : (
+          <Dashboard />
+        );
+
       default:
         return <Dashboard />;
     }
@@ -48,6 +87,10 @@ const AdminLayout = () => {
         <Sidebar
           activeTab={activeTab}
           setActiveTab={(tab) => {
+            // 🛡 Prevent admin from clicking AddAdmin
+            if (tab === "AddAdmin" && authUser?.role !== "superadmin") {
+              return;
+            }
             setActiveTab(tab);
             setSidebarOpen(false);
           }}
