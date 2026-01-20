@@ -1,23 +1,48 @@
 import { useState } from "react";
+import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faStar } from "@fortawesome/free-solid-svg-icons";
 
-function EditParentTestimonialModal({ 
-    // isOpen,
-    onClose,
-    //  testimonial 
-    }) {
-//   if (!isOpen) return null;
+const API_URL = "http://localhost:3000/api/v1/parent-testinomials";
 
-//   const [formData, setFormData] = useState({
-//     name: testimonial?.name || "",
-//     content: testimonial?.content || "",
-//     rating: testimonial?.rating || 5,
-//   });
+function EditParentTestimonialModal({
+  onClose,
+  testimonial,
+  refresh,
+}) {
+  console.log(testimonial)
+  const [formData, setFormData] = useState({
+    name: testimonial?.name || "",
+    content: testimonial?.content || "",
+    rating: testimonial?.rating || 5,
+  });
 
-//   const handleChange = (e) => {
-//     setFormData({ ...formData, [e.target.name]: e.target.value });
-//   };
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  /* ------------------ UPDATE ------------------ */
+  const handleUpdate = async () => {
+    try {
+      setLoading(true);
+
+      await axios.put(`${API_URL}/${testimonial.id}`, {
+        name: formData.name,
+        content: formData.content,
+        rating: formData.rating,
+      });
+
+      refresh(); // 🔥 refresh list
+      onClose();
+    } catch (error) {
+      console.error("Update failed:", error.response || error.message);
+      alert("Failed to update testimonial");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -43,8 +68,8 @@ function EditParentTestimonialModal({
           <div className="relative">
             <input
               name="name"
-            //   value={formData.name}
-            //   onChange={handleChange}
+              value={formData.name}
+              onChange={handleChange}
               className="peer w-full border rounded-lg px-3 pt-5 pb-2 focus:ring-2 focus:ring-indigo-500 outline-none"
               placeholder=" "
             />
@@ -58,8 +83,8 @@ function EditParentTestimonialModal({
             <textarea
               name="content"
               rows={4}
-            //   value={formData.content}
-            //   onChange={handleChange}
+              value={formData.content}
+              onChange={handleChange}
               className="peer w-full border rounded-lg px-3 pt-5 pb-2 focus:ring-2 focus:ring-indigo-500 outline-none resize-none"
               placeholder=" "
             />
@@ -78,17 +103,17 @@ function EditParentTestimonialModal({
                 <button
                   key={r}
                   type="button"
-                //   onClick={() =>
-                //     setFormData({ ...formData, rating: r })
-                //   }
+                  onClick={() =>
+                    setFormData({ ...formData, rating: r })
+                  }
                 >
                   <FontAwesomeIcon
                     icon={faStar}
-                    // className={`text-xl ${
-                    //   r <= formData.rating
-                    //     ? "text-yellow-400"
-                    //     : "text-gray-300"
-                    // }`}
+                    className={`text-xl ${
+                      r <= formData.rating
+                        ? "text-yellow-400"
+                        : "text-gray-300"
+                    }`}
                   />
                 </button>
               ))}
@@ -105,13 +130,11 @@ function EditParentTestimonialModal({
             Cancel
           </button>
           <button
-            onClick={() => {
-            //   console.log("Updated Data:", formData);
-              onClose();
-            }}
-            className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+            disabled={loading}
+            onClick={handleUpdate}
+            className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50"
           >
-            Save Changes
+            {loading ? "Saving..." : "Save Changes"}
           </button>
         </div>
       </div>

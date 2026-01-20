@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faXmark,
@@ -6,32 +7,50 @@ import {
   faUser,
   faMessage,
 } from "@fortawesome/free-solid-svg-icons";
+import { toast } from "react-toastify";
 
-function AddParentTestimonialModal({
-    //  isOpen,
-      onClose,
-    //    onSubmit 
-    }) {
-//   if (!isOpen) return null;
+const API_URL = "http://localhost:3000/api/v1/parent-testinomials"; 
+// 🔼 change if needed
 
-//   const [formData, setFormData] = useState({
-//     name: "",
-//     content: "",
-//     rating: 0,
-//   });
+function AddParentTestimonialModal({ onClose,refresh }) {
+  const [formData, setFormData] = useState({
+    name: "",
+    content: "",
+    rating: 0,
+  });
 
-//   const [hoverRating, setHoverRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [loading, setLoading] = useState(false);
 
-//   const handleChange = (e) => {
-//     setFormData({ ...formData, [e.target.name]: e.target.value });
-//   };
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-//   const handleSubmit = () => {
-//     if (!formData.name || !formData.content || !formData.rating) return;
-//     onSubmit(formData);
-//     setFormData({ name: "", content: "", rating: 0 });
-//     onClose();
-//   };
+  /* ------------------ SUBMIT ------------------ */
+  const handleSubmit = async () => {
+    if (!formData.name || !formData.content || !formData.rating) return;
+
+    try {
+      setLoading(true);
+
+      await axios.post(API_URL, {
+        name: formData.name,
+        content: formData.content,
+        rating: formData.rating,
+      });
+      refresh()
+      onClose(); // close modal on success
+      toast.success("Created Succesfully")
+
+    } catch (error) {
+      console.error("Add testimonial failed:", error.response || error.message);
+      // alert("Failed to add testimonial");
+      toast.error("Failed to Create")
+
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -66,8 +85,8 @@ function AddParentTestimonialModal({
             />
             <input
               name="name"
-            //   value={formData.name}
-            //   onChange={handleChange}
+              value={formData.name}
+              onChange={handleChange}
               className="peer w-full border rounded-lg pl-10 pr-3 pt-5 pb-2 focus:ring-2 focus:ring-indigo-500 outline-none"
               placeholder=" "
             />
@@ -85,8 +104,8 @@ function AddParentTestimonialModal({
             <textarea
               name="content"
               rows={4}
-            //   value={formData.content}
-            //   onChange={handleChange}
+              value={formData.content}
+              onChange={handleChange}
               className="peer w-full border rounded-lg pl-10 pr-3 pt-5 pb-2 focus:ring-2 focus:ring-indigo-500 outline-none resize-none"
               placeholder=" "
             />
@@ -107,17 +126,17 @@ function AddParentTestimonialModal({
                   type="button"
                   onMouseEnter={() => setHoverRating(r)}
                   onMouseLeave={() => setHoverRating(0)}
-                //   onClick={() =>
-                //     setFormData({ ...formData, rating: r })
-                //   }
+                  onClick={() =>
+                    setFormData({ ...formData, rating: r })
+                  }
                 >
                   <FontAwesomeIcon
                     icon={faStar}
-                    // className={`text-2xl transition ${
-                    //   r <= (hoverRating || formData.rating)
-                    //     ? "text-yellow-400 scale-110"
-                    //     : "text-gray-300"
-                    // }`}
+                    className={`text-2xl transition ${
+                      r <= (hoverRating || formData.rating)
+                        ? "text-yellow-400 scale-110"
+                        : "text-gray-300"
+                    }`}
                   />
                 </button>
               ))}
@@ -134,11 +153,16 @@ function AddParentTestimonialModal({
             Cancel
           </button>
           <button
-            // onClick={handleSubmit}
-            // disabled={!formData.name || !formData.content || !formData.rating}
+            onClick={handleSubmit}
+            disabled={
+              loading ||
+              !formData.name ||
+              !formData.content ||
+              !formData.rating
+            }
             className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Add Testimonial
+            {loading ? "Saving..." : "Add Testimonial"}
           </button>
         </div>
       </div>

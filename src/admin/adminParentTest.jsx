@@ -1,36 +1,58 @@
-
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlus,
   faStar,
   faPen,
   faTrash,
-  faSleigh,
 } from "@fortawesome/free-solid-svg-icons";
 import EditParentTestimonialModal from "../components/EditParentTestModal";
 import DeleteParentTestimonialModal from "../components/DeleteParentTestModal";
 import AddParentTestimonialModal from "../components/AddParentTestModal";
 
-function AdminParentTest() {
-  // 🔹 Dummy data (keep empty to test empty state)
-//   const testimonials = [];
-  const testimonials = [
-    {
-      id: 1,
-      name: "Ramesh Kumar",
-      content: "Very helpful exam structure and guidance.",
-      rating: 5,
-    },
-  ];
+// const API_URL = "http://localhost:3000/api/v1/parent-testinomials"; 
+// 🔼 change this to your actual endpoint
 
+function AdminParentTest() {
   /* ------------------ STATE ------------------ */
+  const [testimonials, setTestimonials] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
   const [search, setSearch] = useState("");
   const [itemsPerPage, setItemsPerPage] = useState(15);
   const [currentPage, setCurrentPage] = useState(1);
-  const [showEditTestModal,setShowEditTestModal] = useState(false)
-  const [showDelTestModal,setShowDelModal] = useState(false)
-  const [showAddTestModal,setShowAddTestModal] = useState(false)
+
+  const [showEditTestModal, setShowEditTestModal] = useState(false);
+  const [showDelTestModal, setShowDelModal] = useState(false);
+  const [showAddTestModal, setShowAddTestModal] = useState(false);
+  const [selectTestimonial,setSelectTestimonial] = useState(null)
+  const [selectTestId,setSelectTestId] = useState(null)
+
+  /* ------------------ FETCH DATA ------------------ */
+ const fetchTestimonials = async () => {
+  try {
+    setLoading(true);
+    setError("");
+
+    const res = await axios.get(
+      "http://localhost:3000/api/v1/parent-testinomials"
+    );
+
+    setTestimonials(res.data.data);
+  } catch (err) {
+    console.error(err);
+    setError("Failed to fetch parent testimonials");
+  } finally {
+    setLoading(false);
+  }
+};
+
+useEffect(() => {
+  fetchTestimonials();
+}, []);
+
 
   /* ------------------ FILTER ------------------ */
   const filteredData = useMemo(() => {
@@ -54,7 +76,6 @@ function AdminParentTest() {
     <div className="bg-white rounded-xl shadow p-4">
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-4">
-        {/* Search */}
         <input
           type="text"
           placeholder="Search testimonials..."
@@ -67,7 +88,6 @@ function AdminParentTest() {
         />
 
         <div className="flex items-center gap-3">
-          {/* Items per page */}
           <div className="flex items-center gap-2 text-sm">
             <span>Items per page:</span>
             <select
@@ -84,9 +104,9 @@ function AdminParentTest() {
             </select>
           </div>
 
-          {/* Add Button */}
-          <button className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
-          onClick={() =>{setShowAddTestModal(true)}}
+          <button
+            className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
+            onClick={() => setShowAddTestModal(true)}
           >
             <FontAwesomeIcon icon={faPlus} />
             ADD
@@ -94,41 +114,52 @@ function AdminParentTest() {
         </div>
       </div>
 
-      {/* TABLE (Desktop) */}
-      {paginatedData.length > 0 ? (
+      {/* TABLE */}
+      {loading ? (
+        <div className="py-16 text-center text-gray-500">Loading...</div>
+      ) : error ? (
+        <div className="py-16 text-center text-red-500">{error}</div>
+      ) : paginatedData.length > 0 ? (
         <div className="white rounded-xl shadow overflow-x-auto hidden md:block">
           <table className="min-w-full text-sm">
             <thead className="bg-gray-100 text-sm">
               <tr>
-                <th className="p-2 texxt-left">Name</th>
-                <th className="p-2 texxt-left">Content</th>
-                <th className="p-2 texxt-left">Rating</th>
-                <th className="p-2 texxt-left">Actions</th>
+                <th className="p-2 text-left">Name</th>
+                <th className="p-2 text-left">Content</th>
+                <th className="p-2 text-left">Rating</th>
+                <th className="p-2 text-left">Actions</th>
               </tr>
             </thead>
             <tbody>
               {paginatedData.map((t) => (
-                <tr key={t.id} className="hover:bg-gray-50 border-t ">
-                  <td className="p-2  font-medium">{t.name}</td>
-                  <td className="p-2  text-gray-600">
-                    {t.content}
-                  </td>
-                  <td className="p-2 ">
+                <tr key={t.id} className="hover:bg-gray-50 border-t">
+                  <td className="p-2 font-medium">{t.name}</td>
+                  <td className="p-2 text-gray-600">{t.content}</td>
+                  <td className="p-2">
                     <div className="flex gap-1 text-yellow-500">
                       {Array.from({ length: t.rating }).map((_, i) => (
                         <FontAwesomeIcon key={i} icon={faStar} />
                       ))}
                     </div>
                   </td>
-                  <td className="p-2 ">
+                  <td className="p-2">
                     <div className="flex gap-3">
-                      <button className="text-indigo-600 hover:text-indigo-800"
-                      onClick={() =>{setShowEditTestModal(true)}}
+                      <button
+                        className="text-indigo-600 hover:text-indigo-800"
+                        onClick={() => {
+                          setSelectTestimonial(t)
+                           setShowEditTestModal(true)
+                        }}
                       >
                         <FontAwesomeIcon icon={faPen} />
+
                       </button>
-                      <button className="text-red-600 hover:text-red-800"
-                      onClick={() =>{setShowDelModal(true)}}
+                      <button
+                        className="text-red-600 hover:text-red-800"
+                        onClick={() => {setShowDelModal(true)
+                          setSelectTestId(t.id)
+
+                        }}
                       >
                         <FontAwesomeIcon icon={faTrash} />
                       </button>
@@ -140,7 +171,6 @@ function AdminParentTest() {
           </table>
         </div>
       ) : (
-        /* EMPTY STATE */
         <div className="py-16 text-center text-gray-500">
           <p className="text-lg font-semibold">No Parent Testimonials Found</p>
           <p className="text-sm mt-1">
@@ -149,23 +179,28 @@ function AdminParentTest() {
         </div>
       )}
 
-      {/* MOBILE VIEW (Cards) */}
+      {/* MOBILE VIEW */}
       <div className="md:hidden space-y-4">
         {paginatedData.map((t) => (
-          <div
-            key={t.id}
-            className="border rounded-lg p-4 shadow-sm"
-          >
+          <div key={t.id} className="border rounded-lg p-4 shadow-sm">
             <div className="flex justify-between items-center">
               <h3 className="font-semibold">{t.name}</h3>
               <div className="flex gap-2">
-                <button className="text-indigo-600"
-                    onClick={() =>{setShowEditTestModal(true)}}
+                <button
+                  className="text-indigo-600"
+                  onClick={() =>{ setShowEditTestModal(true) 
+                          setSelectTestimonial(t)
+
+                  }}
                 >
                   <FontAwesomeIcon icon={faPen} />
                 </button>
-                <button className="text-red-600"
-                      onClick={() =>{setShowDelModal(true)}}
+                <button
+                  className="text-red-600"
+                  onClick={() => {setShowDelModal(true)
+                          setSelectTestId(t.id)
+
+                  }}
                 >
                   <FontAwesomeIcon icon={faTrash} />
                 </button>
@@ -198,7 +233,6 @@ function AdminParentTest() {
             >
               &lt;
             </button>
-
             <button
               disabled={currentPage === totalPages}
               onClick={() => setCurrentPage((p) => p + 1)}
@@ -210,10 +244,26 @@ function AdminParentTest() {
         </div>
       )}
 
-
-      {showEditTestModal && (<EditParentTestimonialModal onClose={() =>{setShowEditTestModal(false)}}/>)}
-      {showDelTestModal && (<DeleteParentTestimonialModal onClose={() =>{setShowDelModal(false)}}/>)}
-      {showAddTestModal && (<AddParentTestimonialModal onClose={() =>{setShowAddTestModal(false)}}/>)}
+      {showEditTestModal && (
+        <EditParentTestimonialModal
+        testimonial = {selectTestimonial}
+        onClose={() => setShowEditTestModal(false)} 
+        refresh={fetchTestimonials}
+        
+        />
+      )}
+      {showDelTestModal && (
+        <DeleteParentTestimonialModal
+        selectTestId = {selectTestId}
+        onClose={() => setShowDelModal(false)} 
+        refresh = {fetchTestimonials}/>
+      )}
+      {showAddTestModal && (
+        <AddParentTestimonialModal 
+        onClose={() => setShowAddTestModal(false)} 
+        refresh={fetchTestimonials}
+        />
+      )}
     </div>
   );
 }
