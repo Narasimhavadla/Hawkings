@@ -62,9 +62,9 @@ function ClassCard({ data }) {
 
       {/* Buttons */}
       <div className="flex gap-3 mt-auto">
-        <button className="flex-1 bg-indigo-600 text-white py-1 px-2 rounded-md hover:bg-indigo-700 transition-colors duration-300">
+        <a href="/maths-competetion-registration" className="flex-1 bg-indigo-600 text-white py-1 px-2 rounded-md hover:bg-indigo-700 transition-colors duration-300">
           Apply
-        </button>
+        </a>
         <a
           href={data.syllabus}
           download

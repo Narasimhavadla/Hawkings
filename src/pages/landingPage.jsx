@@ -113,10 +113,11 @@ function LandingPage() {
         </div>
         {/* leve-4 */}
 
-        <div className="sticky top-44 w-[80%] md:w-[70%] mx-auto mt-10">
+      </div>
+       <div className="w-[80%] md:w-[70%] mx-auto mt-6">
           <div className="bg-gradient-to-br from-blue-400 to-blue-500 
                           text-white rounded-3xl p-8 shadow-2xl
-                          transition-all duration-300 hover:scale-[1.02] ">
+                          transition-all duration-300  ">
             {/* <h2 className="text-3xl font-bold mb-4 text-center">
               Final Round
             </h2> */}
@@ -125,16 +126,12 @@ function LandingPage() {
 
                 <h1>Registration Fee ₹1.00/- only which is less than a pizza.</h1>
                 <div className="bg-white/20 rounded-xl p-4 content-center border w-40">
-                    {/* <button className="font-semibold text-center">
-                    APPLY NOW
-                    </button> */}
+                    
                     <a href="/maths-competetion-registration" className="font-semibold px-4 mx-auto  " >Apply now</a>
                 </div>
             </div>
           </div>
         </div>
-
-      </div>
       
       <RewardsSection />
       <ExamScheduleComp />
@@ -144,7 +141,7 @@ function LandingPage() {
 
       <Testimonials />
       <WhatsAppFloating /> 
-      <h1>below </h1>
+   
     </div>
   );
 }

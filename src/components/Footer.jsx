@@ -35,15 +35,15 @@ function Footer() {
           </p>
 
           <div className="flex flex-wrap justify-center gap-4">
-            <a href="" className="hover:text-white transition">
+            <a href="/" className="hover:text-white transition">
               Terms & Conditions
             </a>
             <span className="hidden md:inline">|</span>
-            <a href="" className="hover:text-white transition">
+            <a href="/" className="hover:text-white transition">
               Privacy Policy
             </a>
             <span className="hidden md:inline">|</span>
-            <a href="" className="hover:text-white transition">
+            <a href="/" className="hover:text-white transition">
               Refund Policy
             </a>
           </div>
