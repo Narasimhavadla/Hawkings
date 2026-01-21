@@ -28,12 +28,12 @@ const gradients = [
 
 export default function StudentsPieChart() {
   return (
-    <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
-      <h3 className="font-semibold text-gray-700 mb-4">
+    <div className="bg-white p-2 rounded-xl shadow hover:shadow-lg transition">
+      <h3 className="font-semibold text-gray-700 mb-2">
         Students Distribution by Class
       </h3>
 
-      <ResponsiveContainer width="100%" height={320}>
+      <ResponsiveContainer width="100%" height={240}>
         <PieChart>
           {/* Gradient Definitions */}
           <defs>

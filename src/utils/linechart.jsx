@@ -21,7 +21,7 @@ export default function RegistrationLineChart() {
   return (
     <div className="bg-white p-5 rounded-xl shadow">
       <h3 className="font-semibold mb-4">Registrations (Last 30 Days)</h3>
-      <ResponsiveContainer width="100%" height={250}>
+      <ResponsiveContainer width="100%" height={240}>
         <LineChart data={lineData}>
           <XAxis dataKey="day" />
           <YAxis />
