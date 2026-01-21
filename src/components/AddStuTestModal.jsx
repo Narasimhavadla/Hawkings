@@ -1,8 +1,13 @@
 import { useState } from "react";
+import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faStar } from "@fortawesome/free-solid-svg-icons";
+import { toast } from "react-toastify";
 
-function AddStudentTestimonialModal({ isOpen, onClose, onSubmit }) {
+const API_URL = "http://localhost:3000/api/v1/student-testinomials"; 
+// 🔁 change if needed
+
+function AddStudentTestimonialModal({ isOpen, onClose, onSubmit,onSuccess }) {
   if (!isOpen) return null;
 
   const [form, setForm] = useState({
@@ -11,6 +16,32 @@ function AddStudentTestimonialModal({ isOpen, onClose, onSubmit }) {
     rating: 0,
   });
   const [hover, setHover] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  /* ================= POST API ================= */
+  const handleAdd = async () => {
+    if (!form.name || !form.content || form.rating === 0) {
+      toast.error("All fields are required");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const res = await axios.post(API_URL, form);
+
+      toast.success("Student testimonial added successfully");
+
+      onSubmit && onSubmit(res.data); // optional callback
+      onSuccess()
+      onClose();
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to add testimonial");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -66,13 +97,11 @@ function AddStudentTestimonialModal({ isOpen, onClose, onSubmit }) {
         <footer className="flex justify-end gap-3 p-5 border-t bg-gray-50">
           <button onClick={onClose}>Cancel</button>
           <button
-            onClick={() => {
-              onSubmit(form);
-              onClose();
-            }}
-            className="bg-indigo-600 text-white px-5 py-2 rounded-lg"
+            onClick={handleAdd}
+            disabled={loading}
+            className="bg-indigo-600 text-white px-5 py-2 rounded-lg disabled:opacity-60"
           >
-            Add
+            {loading ? "Adding..." : "Add"}
           </button>
         </footer>
       </div>

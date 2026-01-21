@@ -1,16 +1,51 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faStar } from "@fortawesome/free-solid-svg-icons";
+import { toast } from "react-toastify";
 
-function AddStudentTestimonialModal({ isOpen, onClose, onSubmit }) {
-  if (!isOpen) return null;
+const API_URL = "http://localhost:3000/api/v1/student-testinomials";
+
+function EditStudentTestimonialModal({ isOpen, onClose, data, onSuccess }) {
+  if (!isOpen || !data) return null;
 
   const [form, setForm] = useState({
     name: "",
     content: "",
     rating: 0,
   });
+
   const [hover, setHover] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  /* ================= PREFILL DATA ================= */
+  useEffect(() => {
+    if (data) {
+      setForm({
+        name: data.name || "",
+        content: data.content || "",
+        rating: data.rating || 0,
+      });
+    }
+  }, [data]);
+
+  /* ================= UPDATE API ================= */
+  const handleUpdate = async () => {
+    try {
+      setLoading(true);
+
+      await axios.put(`${API_URL}/${data.id}`, form);
+
+      toast.success("Testimonial updated successfully");
+      onSuccess && onSuccess();
+      onClose();
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to update testimonial");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -21,7 +56,7 @@ function AddStudentTestimonialModal({ isOpen, onClose, onSubmit }) {
 
       <div className="relative bg-white w-[92%] max-w-lg rounded-2xl shadow-2xl animate-scaleIn">
         <header className="flex justify-between items-center p-5 border-b">
-          <h2 className="font-semibold">Add Student Testimonial</h2>
+          <h2 className="font-semibold">Edit Student Testimonial</h2>
           <button onClick={onClose}>
             <FontAwesomeIcon icon={faXmark} />
           </button>
@@ -30,6 +65,7 @@ function AddStudentTestimonialModal({ isOpen, onClose, onSubmit }) {
         <div className="p-6 space-y-4">
           <input
             placeholder="Student Name"
+            value={form.name}
             className="w-full border p-3 rounded-lg focus:ring-2 focus:ring-indigo-500"
             onChange={(e) =>
               setForm({ ...form, name: e.target.value })
@@ -39,6 +75,7 @@ function AddStudentTestimonialModal({ isOpen, onClose, onSubmit }) {
           <textarea
             rows="4"
             placeholder="Testimonial Content"
+            value={form.content}
             className="w-full border p-3 rounded-lg resize-none focus:ring-2 focus:ring-indigo-500"
             onChange={(e) =>
               setForm({ ...form, content: e.target.value })
@@ -66,13 +103,11 @@ function AddStudentTestimonialModal({ isOpen, onClose, onSubmit }) {
         <footer className="flex justify-end gap-3 p-5 border-t bg-gray-50">
           <button onClick={onClose}>Cancel</button>
           <button
-            onClick={() => {
-              onSubmit(form);
-              onClose();
-            }}
-            className="bg-indigo-600 text-white px-5 py-2 rounded-lg"
+            onClick={handleUpdate}
+            disabled={loading}
+            className="bg-indigo-600 text-white px-5 py-2 rounded-lg disabled:opacity-60"
           >
-            Add
+            {loading ? "Updating..." : "Update"}
           </button>
         </footer>
       </div>
@@ -80,4 +115,4 @@ function AddStudentTestimonialModal({ isOpen, onClose, onSubmit }) {
   );
 }
 
-export default AddStudentTestimonialModal;
+export default EditStudentTestimonialModal;

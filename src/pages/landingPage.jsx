@@ -4,19 +4,18 @@ import Testimonials from "../components/testinomials";
 import RewardsSection from "../components/RewardsSection";
 import ExamScheduleComp from "../components/examSchedComp";
 import ClassApplySection from "../components/syllabusComp";
+import WhatsAppFloating from "../forms/WhatsAppFloating";
 
 function LandingPage() {
   return (
     <div className="w-full bg-gray-50">
-
-      {/* Banner */}
       <img
         src={olympiadImg}
         alt="Olympiad Banner"
         className="mx-auto mt-12 rounded-xl shadow-lg"
       />
 
-      {/* Intro */}
+      
       <div className="mt-8 text-center px-4">
         <h1 className="text-3xl md:text-4xl text-purple-600 font-bold">
           BY HAWKINGS
@@ -31,12 +30,12 @@ function LandingPage() {
         </p>
       </div>
 
-      {/* Title */}
+      
       <h1 className="text-4xl font-bold text-center mt-20">
         Exam Journey
       </h1>
 
-      {/* Scroll Stack */}
+     
       <div className="relative mt-24 space-y-52 pb-40">
 
         {/* LEVEL 1 */}
@@ -144,6 +143,8 @@ function LandingPage() {
       {/* testinomials */}
 
       <Testimonials />
+      <WhatsAppFloating /> 
+      <h1>below </h1>
     </div>
   );
 }

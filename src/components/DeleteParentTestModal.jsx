@@ -7,7 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 
-const API_URL = "http://localhost:3000/api/v1/parent-testimonials";
+const API_URL = "http://localhost:3000/api/v1/parent-testinomials";
 
 function DeleteParentTestimonialModal({
   selectTestId,
@@ -23,10 +23,10 @@ function DeleteParentTestimonialModal({
       setLoading(true);
 
       await axios.delete(`${API_URL}/${selectTestId}`);
-
-      refresh();   // 🔥 refresh parent list
-      onClose();   // close modal
       toast.success("Deleted Succesfully")
+      
+      refresh();   
+      onClose();   
     } catch (error) {
       console.error("Delete failed:", error.response || error.message);
       // alert("Failed to delete testimonial");

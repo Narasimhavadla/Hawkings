@@ -18,12 +18,9 @@ export default function StudentForm() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-lg px-6 py-8">
+    <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg px-6 py-5">
 
-      {/* Section Title */}
-      <h2 className="text-xl font-semibold text-gray-800 mb-6 border-b pb-3">
-        Student Registration Details
-      </h2>
+    
 
       <form className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
@@ -144,7 +141,7 @@ export default function StudentForm() {
 function InputField({ label, icon, required, ...props }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-600 mb-1">
+      <label className="block text-sm font-medium text-gray-600 ">
         {label} {required && <span className="text-red-500">*</span>}
       </label>
 
@@ -158,7 +155,7 @@ function InputField({ label, icon, required, ...props }) {
 
         <input
           {...props}
-          className={`w-full h-11 border rounded-lg px-3
+          className={`w-full h-9 border rounded-lg px-3
           ${icon ? "pl-9" : ""}
            focus:outline-none`}
         />
@@ -171,7 +168,7 @@ function InputField({ label, icon, required, ...props }) {
 function InputSelect({ label, icon, options, required, ...props }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-600 mb-1">
+      <label className="block text-sm font-medium text-gray-600 ">
         {label} {required && <span className="text-red-500">*</span>}
       </label>
 
@@ -185,7 +182,7 @@ function InputSelect({ label, icon, options, required, ...props }) {
 
         <select
           {...props}
-          className={`w-full h-11 border rounded-lg px-3 bg-white
+          className={`w-full h-9 border rounded-lg px-3 bg-white
           ${icon ? "pl-9" : ""}
            focus:outline-none`}
         >

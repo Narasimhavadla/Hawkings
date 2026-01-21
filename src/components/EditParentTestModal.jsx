@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faStar } from "@fortawesome/free-solid-svg-icons";
+import { toast } from "react-toastify";
 
 const API_URL = "http://localhost:3000/api/v1/parent-testinomials";
 
@@ -33,12 +34,13 @@ function EditParentTestimonialModal({
         content: formData.content,
         rating: formData.rating,
       });
-
+      toast.success("Edited Succesfully")
       refresh(); // 🔥 refresh list
       onClose();
     } catch (error) {
       console.error("Update failed:", error.response || error.message);
-      alert("Failed to update testimonial");
+      // alert("Failed to update testimonial");
+      toast.error("Failed to Delete")
     } finally {
       setLoading(false);
     }

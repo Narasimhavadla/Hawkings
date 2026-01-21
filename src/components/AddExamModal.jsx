@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faCalendarPlus } from "@fortawesome/free-solid-svg-icons";
+import { toast } from "react-toastify";
 
 function AddExamScheduleModal({ onClose, onSuccess }) {
   const [formData, setFormData] = useState({
@@ -51,11 +52,14 @@ function AddExamScheduleModal({ onClose, onSuccess }) {
       if (res.data.status) {
         onSuccess?.(); // refresh list
         onClose();
+        toast.success("Created Succesfully")
       }
     } catch (err) {
       setError(
         err.response?.data?.message || "Failed to create exam schedule"
       );
+        toast.error("Failed to create")
+
     } finally {
       setLoading(false);
     }

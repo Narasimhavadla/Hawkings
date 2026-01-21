@@ -138,7 +138,7 @@ const UserActivities = () => {
   return (
     <div className="bg-white rounded-xl shadow p-4 sm:p-6">
       {/* Header */}
-      <div className="flex flex-col lg:flex-row gap-4 justify-between mb-6">
+      <div className="flex flex-col lg:flex-row gap-4 justify-between mb-3">
         <h2 className="text-xl font-bold">
           User Activity Report
         </h2>
@@ -151,7 +151,7 @@ const UserActivities = () => {
               setRoleFilter(e.target.value);
               setCurrentPage(1);
             }}
-            className="border px-3 py-2 rounded-lg text-sm"
+            className="border px-3 py-1 rounded-lg text-sm"
           >
             <option value="all">All Roles</option>
             <option value="user">User</option>
@@ -167,7 +167,7 @@ const UserActivities = () => {
               setDateFilter("");
               setCurrentPage(1);
             }}
-            className="border px-3 py-2 rounded-lg text-sm"
+            className="border px-3 py-1 rounded-lg text-sm"
           >
             <option value="all">All Dates</option>
             <option value="today">Today</option>
@@ -202,16 +202,16 @@ const UserActivities = () => {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto rounded-xl">
         <table className="w-full text-sm border-collapse">
           <thead>
             <tr className="bg-slate-900 text-white">
-              <th className="px-4 py-3 text-left">S.No</th>
-              <th className="px-4 py-3 text-left">Username</th>
-              <th className="px-4 py-3 text-left">Role</th>
-              <th className="px-4 py-3 text-left">Login</th>
-              <th className="px-4 py-3 text-left">Logout</th>
-              <th className="px-4 py-3 text-left">Time Spent</th>
+              <th className="px-4 py-2 text-left">S.No</th>
+              <th className="px-4 py-2 text-left">Username</th>
+              <th className="px-4 py-2 text-left">Role</th>
+              <th className="px-4 py-2 text-left">Login</th>
+              <th className="px-4 py-2 text-left">Logout</th>
+              <th className="px-4 py-2 text-left">Time Spent</th>
             </tr>
           </thead>
 
@@ -222,28 +222,28 @@ const UserActivities = () => {
                   key={index}
                   className="border-b hover:bg-gray-50"
                 >
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-2">
                     {(currentPage - 1) * ITEMS_PER_PAGE +
                       index +
                       1}
                   </td>
-                  <td className="px-4 py-3 font-medium">
+                  <td className="px-4 py-2 font-medium">
                     {item.username}
                   </td>
-                  <td className="px-4 py-3 capitalize">
+                  <td className="px-4 py-2 capitalize">
                     {item.role}
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-2">
                     {new Date(item.loginTime).toLocaleString()}
                   </td>
-                  <td className={`px-4 py-3`}>
+                  <td className={`px-4 py-2`}>
                     {item.logoutTime
                       ? new Date(
                           item.logoutTime
                         ).toLocaleString()
                       : "Active"}
                   </td>
-                  <td className="px-4 py-3 font-semibold text-blue-600">
+                  <td className="px-4 py-2 font-semibold text-blue-600">
                     {calculateDuration(
                       item.loginTime,
                       item.logoutTime
@@ -266,11 +266,11 @@ const UserActivities = () => {
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-end gap-3 mt-6">
+      <div className="flex justify-end gap-3 mt-4">
         <button
           disabled={currentPage === 1}
           onClick={() => setCurrentPage((p) => p - 1)}
-          className={`px-4 py-2 rounded ${
+          className={`px-4 py-1 rounded ${
             currentPage === 1
               ? "bg-gray-300 cursor-not-allowed"
               : "bg-blue-600 text-white"
@@ -282,7 +282,7 @@ const UserActivities = () => {
         <button
           disabled={currentPage === totalPages || totalPages === 0}
           onClick={() => setCurrentPage((p) => p + 1)}
-          className={`px-4 py-2 rounded ${
+          className={`px-4 py-1 rounded ${
             currentPage === totalPages || totalPages === 0
               ? "bg-gray-300 cursor-not-allowed"
               : "bg-blue-600 text-white"

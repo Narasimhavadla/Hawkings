@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlus,
@@ -6,30 +7,51 @@ import {
   faTrash,
   faStar,
 } from "@fortawesome/free-solid-svg-icons";
+
 import AddStudentTestimonialModal from "../components/AddStuTestModal";
 import EditStudentTestimonialModal from "../components/EditStuTestModal";
 import DeleteConfirmModal from "../components/DelStuTestModal";
 
-function AdminStuTest() {
-//   const [data, setData] = useState([]); // API data
-  const data = [
-    {
-        id : 1,
-        name : "kishore",
-        content : "usefull",
-        rating : 4
-        
-    }
-  ]
+const API_URL = "http://localhost:3000/api/v1/student-testinomials"; 
+// 🔁 change to your actual endpoint
 
+function AdminStuTest() {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const [selected, setSelected] = useState(null);
+  const [selectIdDel,setSelectIdDel] = useState(null)
   const [showAdd, setShowAdd] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
 
+  const [selectTest,setSelectTest] = useState(null)
+
+  /* ================= FETCH DATA ================= */
+  const fetchTestimonials = async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      const res = await axios.get(API_URL);
+
+      // ✅ adjust if your API response structure is different
+      setData(res.data.data || res.data);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to load testimonials");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTestimonials();
+  }, []);
+
   return (
-    <div className="p-4 md:p-6">
+    <div className="p-3 md:p-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-xl font-semibold">Student Testimonials</h1>
@@ -43,19 +65,31 @@ function AdminStuTest() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl shadow overflow-x-auto">
+      <div className="bg-white rounded-xl shadow overflow-x-auto ">
         <table className="w-full min-w-[700px]">
           <thead className="bg-gray-100 text-sm">
             <tr>
-              <th className="p-3 text-left">Name</th>
-              <th className="p-3 text-left">Rating</th>
-              <th className="p-3 text-left">Content</th>
-              <th className="p-3 text-center">Actions</th>
+              <th className="p-2 text-left">Name</th>
+              <th className="p-2 text-left">Rating</th>
+              <th className="p-2 text-left">Content</th>
+              <th className="p-2 text-center">Actions</th>
             </tr>
           </thead>
 
           <tbody>
-            {data.length === 0 ? (
+            {loading ? (
+              <tr>
+                <td colSpan="4" className="py-20 text-center text-gray-400">
+                  Loading testimonials...
+                </td>
+              </tr>
+            ) : error ? (
+              <tr>
+                <td colSpan="4" className="py-20 text-center text-red-500">
+                  {error}
+                </td>
+              </tr>
+            ) : data.length === 0 ? (
               <tr>
                 <td colSpan="4" className="py-20 text-center text-gray-400">
                   No Student Testimonials Found
@@ -99,7 +133,7 @@ function AdminStuTest() {
 
                     <button
                       onClick={() => {
-                        setSelected(item);
+                        setSelectIdDel(item.id);
                         setShowDelete(true);
                       }}
                       className="text-red-500 hover:scale-110 transition"
@@ -118,23 +152,24 @@ function AdminStuTest() {
       <AddStudentTestimonialModal
         isOpen={showAdd}
         onClose={() => setShowAdd(false)}
-        onSubmit={(d) => console.log("ADD", d)}
+        onSuccess={fetchTestimonials} // 🔥 refresh after add
       />
 
       <EditStudentTestimonialModal
         isOpen={showEdit}
         data={selected}
         onClose={() => setShowEdit(false)}
-        onSubmit={(d) => console.log("EDIT", d)}
+        onSuccess={fetchTestimonials} // 🔥 refresh after edit
       />
 
-      <DeleteConfirmModal
+     <DeleteConfirmModal
         isOpen={showDelete}
-        title="Delete Student Testimonial?"
-        description="This action cannot be undone."
+        testimonialId={selectIdDel}
         onClose={() => setShowDelete(false)}
-        onConfirm={() => console.log("DELETE", selected)}
+        onSuccess={fetchTestimonials}
       />
+
+
     </div>
   );
 }
