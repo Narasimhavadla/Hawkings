@@ -6,7 +6,7 @@ faPhone,
 
 
 export default function WhatsAppFloating() {
-  const phoneNumber = "916300157188"; 
+  const phoneNumber = "919032708639"; 
 
   return (
     <a
