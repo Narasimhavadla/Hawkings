@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
 import {
   PieChart,
   Pie,
@@ -5,15 +7,6 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-
-const data = [
-  { name: "Class 4", value: 10 },
-  { name: "Class 5", value: 15 },
-  { name: "Class 6", value: 13 },
-  { name: "Class 7", value: 19 },
-  { name: "Class 8", value: 15 },
-  { name: "Class 9", value: 9 },
-];
 
 const gradients = [
   { id: "g1", from: "#60a5fa", to: "#2563eb" },
@@ -24,28 +17,24 @@ const gradients = [
   { id: "g6", from: "#f87171", to: "#dc2626" },
 ];
 
-
-
 export default function StudentsPieChart() {
-  return (
-    <div className="bg-white p-2 rounded-xl shadow hover:shadow-lg transition">
-      <h3 className="font-semibold text-gray-700 mb-2">
-        Students Distribution by Class
-      </h3>
+  const [data, setData] = useState([]);
 
-      <ResponsiveContainer width="100%" height={240}>
+  useEffect(() => {
+    axios.get("http://localhost:3000/api/v1/student-pie")
+      .then((res) => setData(res.data.data))
+      .catch(console.error);
+  }, []);
+
+  return (
+    <div className="p-2 rounded-xl shadow hover:shadow-lg transition">
+      
+
+      <ResponsiveContainer width="100%" height={240} className="">
         <PieChart>
-          {/* Gradient Definitions */}
           <defs>
             {gradients.map((g) => (
-              <linearGradient
-                key={g.id}
-                id={g.id}
-                x1="0"
-                y1="0"
-                x2="1"
-                y2="1"
-              >
+              <linearGradient key={g.id} id={g.id} x1="0" y1="0" x2="1" y2="1">
                 <stop offset="0%" stopColor={g.from} />
                 <stop offset="100%" stopColor={g.to} />
               </linearGradient>
@@ -56,11 +45,10 @@ export default function StudentsPieChart() {
             data={data}
             dataKey="value"
             nameKey="name"
-            innerRadius={0}          // full pie (no donut gap)
+            innerRadius={0}
             outerRadius={120}
-            paddingAngle={0}         // ❌ NO SPACES
+            paddingAngle={0}
             labelLine={false}
-            isAnimationActive
           >
             {data.map((_, index) => (
               <Cell
@@ -71,7 +59,10 @@ export default function StudentsPieChart() {
           </Pie>
 
           <Tooltip />
+
         </PieChart>
+       
+
       </ResponsiveContainer>
     </div>
   );

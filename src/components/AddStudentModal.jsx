@@ -76,12 +76,12 @@ export default function AddStudentModal({ onClose, refresh }) {
             className="border rounded-lg h-11 px-3"
           >
             <option value="">Select Class</option>
-            <option value="class-4">Class 4</option>
-            <option value="class-5">Class 5</option>
-            <option value="class-6">Class 6</option>
-            <option value="class-7">Class 7</option>
-            <option value="class-8">Class 8</option>
-            <option value="class-9">Class 9</option>
+            <option value="Class-4">Class 4</option>
+            <option value="Class-5">Class 5</option>
+            <option value="Class-6">Class 6</option>
+            <option value="Class-7">Class 7</option>
+            <option value="Class-8">Class 8</option>
+            <option value="Class-9">Class 9</option>
           </select>
 
           <Input label="Email" name="email" icon={faEnvelope} onChange={handleChange} />
@@ -108,7 +108,7 @@ export default function AddStudentModal({ onClose, refresh }) {
             className="border rounded-lg h-11 px-3"
           >
             <option value="pending">Pending</option>
-            <option value="completed">Completed</option>
+            <option value="Completed">Completed</option>
             <option value="rejected">Rejected</option>
           </select>
 

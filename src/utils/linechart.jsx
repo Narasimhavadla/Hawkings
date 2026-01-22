@@ -1,39 +1,72 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
   Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+} from "chart.js";
+import { Line } from "react-chartjs-2";
 
-const lineData = [
-  { day: "1", students: 2 },
-  { day: "5", students: 6 },
-  { day: "10", students: 10 },
-  { day: "15", students: 18 },
-  { day: "20", students: 25 },
-  { day: "25", students: 30 },
-  { day: "30", students: 42 },
-];
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Tooltip
+);
 
 export default function RegistrationLineChart() {
+  const [chartData, setChartData] = useState(null);
+
+  useEffect(() => {
+    axios.get("http://localhost:3000/api/v1/student-line")
+      .then((res) => {
+        const labels = res.data.data.map(d => d.day);
+        const values = res.data.data.map(d => d.students);
+
+        setChartData({
+          labels,
+          datasets: [
+            {
+              label: "Students Registered",
+              data: values,
+              borderColor: "#2563eb", 
+              backgroundColor: "#2563eb",
+              pointBackgroundColor: "#2563eb",
+               pointBorderColor: "#2563eb",
+              borderWidth: 2,
+              tension: 0.4,
+              fill: false,
+            },
+          ],
+        });
+      })
+      .catch(console.error);
+  }, []);
+
+  if (!chartData) return null;
+
   return (
-    <div className="bg-white p-5 rounded-xl shadow">
-      <h3 className="font-semibold mb-4">Registrations (Last 30 Days)</h3>
-      <ResponsiveContainer width="100%" height={240}>
-        <LineChart data={lineData}>
-          <XAxis dataKey="day" />
-          <YAxis />
-          <Tooltip />
-          <Line
-            type="monotone"
-            dataKey="students"
-            stroke="#2563eb"
-            strokeWidth={3}
-          />
-        </LineChart>
-      </ResponsiveContainer>
+    <div className="bg-white p-5 rounded-xl shadow hover:shadow-lg transition">
+      
+      <Line
+        data={chartData}
+        options={{
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { precision: 0 },
+            },
+          },
+        }}
+      />
     </div>
   );
 }

@@ -205,14 +205,14 @@ function AdminStudent() {
                   {(currentPage - 1) * itemsPerPage + index + 1}
                 </td>
                 <td className="p-2 font-semibold">{s.name}</td>
-                <td className="p-2">{s.class}</td>
+                <td className="p-2">{s.Class}</td>
                 <td className="p-2">{s.email}</td>
                 <td className="p-2">{s.phone}</td>
                 <td className="p-2">{s.state}</td>
                 <td className="p-2">{s.city}</td>
                 <td className="p-2">{s.institute}</td>
                 <td className="p-2 text-center">
-                  <FontAwesomeIcon
+                  <FontAwesomeIcon 
                     icon={faCircle}
                     className={
                       s.Status === "pending"

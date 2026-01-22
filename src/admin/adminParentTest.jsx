@@ -1,11 +1,18 @@
 import { useState, useMemo, useEffect } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlus,
   faStar,
   faPen,
   faTrash,
+  faTicket,
+  faArrowCircleRight,
+  faArrowUpRightFromSquare,
+  faLink,
+  faLinkSlash,
 } from "@fortawesome/free-solid-svg-icons";
 import EditParentTestimonialModal from "../components/EditParentTestModal";
 import DeleteParentTestimonialModal from "../components/DeleteParentTestModal";
@@ -71,6 +78,24 @@ useEffect(() => {
     const start = (currentPage - 1) * itemsPerPage;
     return filteredData.slice(start, start + itemsPerPage);
   }, [filteredData, currentPage, itemsPerPage]);
+
+  const togglePublish = async (id) => {
+  try {
+    await axios.patch(
+      `http://localhost:3000/api/v1/parent-testinomials/${id}/toggle`
+    );
+
+    toast.success("Status updated");
+    fetchTestimonials();
+  } catch (err) {
+    if (err.response?.status === 400) {
+      toast.warning("Only 4 testimonials can be displayed");
+    } else {
+      toast.error("Failed to update status");
+    }
+  }
+};
+
 
   return (
     <div className="bg-white rounded-xl shadow p-4">
@@ -163,6 +188,14 @@ useEffect(() => {
                       >
                         <FontAwesomeIcon icon={faTrash} />
                       </button>
+                      <button
+                          className={`${
+                            t.isPublished ? "text-red-600" : "text-blue-600"} text-md`}
+                          onClick={() => togglePublish(t.id)}
+                        >
+                          <FontAwesomeIcon icon={t.isPublished ? faLinkSlash : faArrowUpRightFromSquare}/>
+                        </button>
+
                     </div>
                   </td>
                 </tr>
@@ -203,6 +236,15 @@ useEffect(() => {
                   }}
                 >
                   <FontAwesomeIcon icon={faTrash} />
+                </button>
+                <button
+                  className="text-blue-600"
+                  onClick={() => {setShowDelModal(true)
+                          setSelectTestId(t.id)
+
+                  }}
+                >
+                  <FontAwesomeIcon icon={faLinkSlash} />
                 </button>
               </div>
             </div>

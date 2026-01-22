@@ -1,9 +1,6 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faQuoteLeft } from "@fortawesome/free-solid-svg-icons";
 
-/* ------------------ STATIC STUDENT TESTIMONIALS ------------------ */
 const studentTestimonials = [
   {
     id: 1,
@@ -31,14 +28,38 @@ const studentTestimonials = [
   },
 ];
 
-/* ------------------ STUDENT CARD ------------------ */
+const parentTestimonials = [
+  {
+    id: 1,
+    name: "Suresh Kumar",
+    role: "Parent of Class 5 Student",
+    message:
+      "Hawkings Maths Olympiad helped my child develop logical thinking. The platform is very well designed.",
+    rating: 5,
+  },
+  {
+    id: 2,
+    name: "Lakshmi Devi",
+    role: "Parent of Class 4 Student",
+    message:
+      "I noticed a big improvement in my child’s confidence and problem-solving skills.",
+    rating: 5,
+  },
+  {
+    id: 3,
+    name: "Ramesh Rao",
+    role: "Parent of Class 6 Student",
+    message:
+      "A great initiative for students. The questions are age-appropriate and engaging.",
+    rating: 3,
+  },
+];
+
 function TestimonialCard({ data }) {
   return (
-    <div
-      className="bg-white rounded-2xl shadow-md p-6 
-                 hover:shadow-xl hover:-translate-y-1 
-                 transition-all duration-300"
-    >
+    <div className="bg-white rounded-2xl shadow-md p-6 
+                    hover:shadow-xl hover:-translate-y-1 
+                    transition-all duration-300">
       <FontAwesomeIcon
         icon={faQuoteLeft}
         className="text-purple-500 text-3xl mb-4"
@@ -48,6 +69,7 @@ function TestimonialCard({ data }) {
         {data.message}
       </p>
 
+      {/* Rating */}
       <div className="flex gap-1 mb-4">
         {[...Array(data.rating)].map((_, i) => (
           <FontAwesomeIcon
@@ -58,37 +80,33 @@ function TestimonialCard({ data }) {
         ))}
       </div>
 
+      {/* User Info */}
       <div className="flex items-center gap-3">
-        <div
-          className="w-10 h-10 rounded-full bg-gradient-to-r 
-                     from-purple-500 to-indigo-500 
-                     flex items-center justify-center 
-                     text-white font-bold"
-        >
+        <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 
+                        flex items-center justify-center text-white font-bold">
           {data.name.charAt(0)}
         </div>
         <div>
           <h4 className="font-semibold">{data.name}</h4>
-          <p className="text-xs text-gray-500">{data.class}</p>
+          <p className="text-xs text-gray-500">
+            {data.class || data.role}
+          </p>
         </div>
       </div>
     </div>
   );
 }
 
-/* ------------------ PARENT CARD ------------------ */
 function ParentTestimonialCard({ data }) {
   return (
-    <div
-      className="bg-gradient-to-br from-gray-100 to-gray-50 
-                 rounded-2xl border border-gray-200 p-6
-                 hover:shadow-lg transition-all"
-    >
+    <div className="bg-gradient-to-br from-gray-100 to-gray-50 
+                    rounded-2xl border border-gray-200 p-6
+                    hover:shadow-lg transition-all">
+
+      {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <span
-          className="px-3 py-1 text-xs font-semibold rounded-full 
-                     bg-indigo-100 text-indigo-700"
-        >
+        <span className="px-3 py-1 text-xs font-semibold rounded-full 
+                         bg-indigo-100 text-indigo-700">
           Parent Review
         </span>
 
@@ -103,46 +121,36 @@ function ParentTestimonialCard({ data }) {
         </div>
       </div>
 
+      {/* Message */}
       <p className="text-gray-700 text-sm leading-relaxed mb-6">
-        “{data.content}”
+        “{data.message}”
       </p>
 
+      {/* Parent Info */}
       <div className="flex items-center gap-3 border-t pt-4">
-        <div
-          className="w-11 h-11 rounded-full bg-indigo-600
-                     flex items-center justify-center 
-                     text-white font-bold"
-        >
+        <div className="w-11 h-11 rounded-full bg-indigo-600
+                        flex items-center justify-center text-white font-bold">
           {data.name.charAt(0)}
         </div>
         <div>
-          <h4 className="font-semibold text-gray-800">{data.name}</h4>
-          <p className="text-xs text-gray-500">Parent</p>
+          <h4 className="font-semibold text-gray-800">
+            {data.name}
+          </h4>
+          <p className="text-xs text-gray-500">
+            {data.role}
+          </p>
         </div>
       </div>
     </div>
   );
 }
 
-/* ------------------ MAIN COMPONENT ------------------ */
+
 export default function Testimonials() {
-  const [parentTestimonials, setParentTestimonials] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  /* FETCH ONLY PUBLISHED PARENT TESTIMONIALS */
-  useEffect(() => {
-    axios
-      .get("http://localhost:3000/api/v1/parent-testinomials/published")
-      .then((res) => {
-        setParentTestimonials(res.data.data);
-      })
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, []);
-
   return (
     <div className="min-h-screen bg-gray-50 py-16">
-      {/* PAGE TITLE */}
+
+      {/* Page Title */}
       <div className="text-center mb-14 px-4">
         <h1 className="text-3xl md:text-4xl font-extrabold">
           Testimonials
@@ -152,28 +160,21 @@ export default function Testimonials() {
         </p>
       </div>
 
-      {/* PARENT TESTIMONIALS */}
+      {/* Parent Testimonials */}
       <section className="max-w-6xl mx-auto px-6">
         <h2 className="text-2xl font-bold mb-8 text-center">
-          Parent Testimonials
+           Parent Testimonials
         </h2>
 
-        {loading ? (
-          <p className="text-center text-gray-500">Loading...</p>
-        ) : parentTestimonials.length === 0 ? (
-          <p className="text-center text-gray-500">
-            No testimonials available
-          </p>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-            {parentTestimonials.map((item) => (
-              <ParentTestimonialCard key={item.id} data={item} />
-            ))}
-          </div>
-        )}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          {parentTestimonials.map((item) => (
+            <ParentTestimonialCard key={item.id} data={item} />
+          ))}
+        </div>
       </section>
 
-      {/* STUDENT TESTIMONIALS */}
+
+      {/* Student Testimonials */}
       <section className="max-w-6xl mx-auto px-6 mb-20 mt-14">
         <h2 className="text-2xl font-bold mb-8 text-center">
           Student Testimonials
@@ -185,6 +186,9 @@ export default function Testimonials() {
           ))}
         </div>
       </section>
+
+      
+
     </div>
   );
 }
