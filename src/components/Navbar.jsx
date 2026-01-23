@@ -63,8 +63,8 @@ function Navbar() {
                 `px-3 py-2 rounded transition-all duration-300
                 ${
                   isActive
-                    ? "bg-blue-700 scale-105"
-                    : "hover:bg-blue-800 hover:scale-105"
+                    ? "bg-purple-700 scale-105"
+                    : "hover:bg-purple-800 hover:scale-105"
                 }`
               }
             >
@@ -110,7 +110,7 @@ function Navbar() {
               key={item.path}
               to={item.path}
               onClick={() => setOpen(false)}
-              className="px-4 py-3 rounded hover:bg-blue-800"
+              className="px-4 py-3 rounded hover:bg-purple-800"
             >
               {item.name}
             </NavLink>

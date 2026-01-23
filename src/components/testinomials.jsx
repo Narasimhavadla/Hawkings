@@ -161,9 +161,106 @@ export default function Testimonials() {
         {loading ? (
           <p className="text-center text-gray-500">Loading...</p>
         ) : parentTestimonials.length === 0 ? (
-          <p className="text-center text-gray-500">
-            No testimonials available
-          </p>
+          <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="bg-gradient-to-br from-gray-100 to-gray-50 
+                rounded-2xl border border-gray-200 p-6
+                hover:shadow-lg transition-all">
+  <p className="text-gray-700 text-sm leading-relaxed mb-6">
+    “Hawking Maths Olympiad helped my child develop better logical thinking.
+    The questions were challenging yet age-appropriate, and it encouraged
+    a deeper understanding of concepts.”
+  </p>
+  <div className="flex items-center gap-3 border-t pt-4">
+    <div className="w-11 h-11 rounded-full bg-indigo-600
+                    flex items-center justify-center text-white font-bold">
+      N
+    </div>
+    <div>
+      <h4 className="font-semibold text-gray-800">
+        Narasimha Reddy
+      </h4>
+      <p className="text-xs text-gray-500">
+        Parent
+      </p>
+    </div>
+  </div>
+</div>
+
+<div className="bg-gradient-to-br from-gray-100 to-gray-50 
+                rounded-2xl border border-gray-200 p-6
+                hover:shadow-lg transition-all">
+  <p className="text-gray-700 text-sm leading-relaxed mb-6">
+    “I noticed a significant improvement in my daughter’s problem-solving
+    skills after participating in the Hawking Maths Olympiad. It motivated
+    her to practice maths with interest rather than fear.”
+  </p>
+  <div className="flex items-center gap-3 border-t pt-4">
+    <div className="w-11 h-11 rounded-full bg-indigo-600
+                    flex items-center justify-center text-white font-bold">
+      S
+    </div>
+    <div>
+      <h4 className="font-semibold text-gray-800">
+        Sujatha Rao
+      </h4>
+      <p className="text-xs text-gray-500">
+        Parent
+      </p>
+    </div>
+  </div>
+</div>
+
+<div className="bg-gradient-to-br from-gray-100 to-gray-50 
+                rounded-2xl border border-gray-200 p-6
+                hover:shadow-lg transition-all">
+  <p className="text-gray-700 text-sm leading-relaxed mb-6">
+    “The Olympiad provided a healthy academic challenge for my son.
+    The focus on concepts rather than memorization made it a valuable
+    learning experience.”
+  </p>
+  <div className="flex items-center gap-3 border-t pt-4">
+    <div className="w-11 h-11 rounded-full bg-indigo-600
+                    flex items-center justify-center text-white font-bold">
+      R
+    </div>
+    <div>
+      <h4 className="font-semibold text-gray-800">
+        Ravi Kumar
+      </h4>
+      <p className="text-xs text-gray-500">
+        Parent
+      </p>
+    </div>
+  </div>
+</div>
+
+<div className="bg-gradient-to-br from-gray-100 to-gray-50 
+                rounded-2xl border border-gray-200 p-6
+                hover:shadow-lg transition-all">
+  <p className="text-gray-700 text-sm leading-relaxed mb-6">
+    “Hawking Maths Olympiad helped us understand our child’s strengths
+    and areas for improvement. The overall experience was smooth and
+    academically enriching.”
+  </p>
+  <div className="flex items-center gap-3 border-t pt-4">
+    <div className="w-11 h-11 rounded-full bg-indigo-600
+                    flex items-center justify-center text-white font-bold">
+      L
+    </div>
+    <div>
+      <h4 className="font-semibold text-gray-800">
+        Lakshmi Devi
+      </h4>
+      <p className="text-xs text-gray-500">
+        Parent
+      </p>
+    </div>
+  </div>
+</div>
+
+          </div>
+          
+    
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
             {parentTestimonials.map((item) => (

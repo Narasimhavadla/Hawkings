@@ -10,6 +10,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import AddAdmin from "../superAdmin/addAdmin";
 import UserActivities from "../superAdmin/userActivity";
+import AdminTeacherRegistration from "./adminTeachers";
+import Reffarals from "../superAdmin/Refferals";
+import Payment from "./Payment";
 
 const AdminLayout = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -43,12 +46,17 @@ const AdminLayout = () => {
     switch (activeTab) {
       case "students":
         return <AdminStudent />;
+      case "teachers":
+        return <AdminTeacherRegistration />;
       case "exam":
         return <AdminExamSched />;
       case "parent":
         return <AdminParentTest />;
       case "student":
         return <AdminStuTest />;
+      case "payment":
+        return <Payment />;
+        
 
       // 🛡 Super Admin protection
       case "AddAdmin":
@@ -60,6 +68,12 @@ const AdminLayout = () => {
          case "userActivity":
         return authUser?.role === "superadmin" ? (
           <UserActivities />
+        ) : (
+          <Dashboard />
+        );
+         case "refferals":
+        return authUser?.role === "superadmin" ? (
+          <Reffarals />
         ) : (
           <Dashboard />
         );

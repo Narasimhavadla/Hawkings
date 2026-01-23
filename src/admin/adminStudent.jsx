@@ -43,7 +43,9 @@ function AdminStudent() {
       setLoading(true);
       setError(null);
       const res = await axios.get("http://localhost:3000/api/v1/student");
-      setStudents(res.data.data);
+      // Sort by ID descending (newest first)
+      const sortedStudents = res.data.data.sort((a, b) => b.id - a.id);
+      setStudents(sortedStudents);
     } catch (err) {
       console.error(err);
       setError("Failed to load students");
@@ -103,7 +105,7 @@ function AdminStudent() {
 
   /* ------------------ UI ------------------ */
   return (
-    <div className="bg-white rounded-xl shadow p-4">
+    <div className="bg-white rounded-xl shadow p-2">
       {/* Loading */}
       {loading && (
         <div className="text-center py-4 text-indigo-600 font-semibold">
@@ -119,7 +121,7 @@ function AdminStudent() {
       )}
 
       {/* Top Controls */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-4">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-2">
         <input
           type="text"
           placeholder="Search by Name / Phone / Email"
@@ -128,7 +130,7 @@ function AdminStudent() {
             setSearch(e.target.value);
             setCurrentPage(1);
           }}
-          className="border px-3 py-2 rounded w-full lg:w-64 focus:ring"
+          className="border px-3 py-1 rounded w-full lg:w-64 focus:ring"
         />
 
         <div className="flex flex-wrap items-center gap-3">
@@ -164,7 +166,7 @@ function AdminStudent() {
 
           <button
             onClick={() => setShowAddModal(true)}
-            className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded"
+            className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-1 rounded"
           >
             <FontAwesomeIcon icon={faPlus} />
             ADD
@@ -172,7 +174,7 @@ function AdminStudent() {
 
           <button
             onClick={exportToExcel}
-            className="flex items-center gap-2 bg-pink-500 text-white px-4 py-2 rounded"
+            className="flex items-center gap-2 bg-green-500 text-white px-4 py-1 rounded"
           >
             <FontAwesomeIcon icon={faFileExport} />
             Export
@@ -183,7 +185,7 @@ function AdminStudent() {
       {/* Table */}
       <div className="overflow-x-auto rounded-xl">
         <table className="min-w-full text-sm">
-          <thead className="bg-gray-100">
+          <thead className="bg-gray-200">
             <tr>
               <th className="p-2">S.No</th>
               <th className="p-2">Name</th>
@@ -201,18 +203,18 @@ function AdminStudent() {
           <tbody>
             {paginatedStudents.map((s, index) => (
               <tr key={s.id} className="border-t hover:bg-gray-50">
-                <td className="p-2">
+                <td className="px-4">
                   {(currentPage - 1) * itemsPerPage + index + 1}
                 </td>
-                <td className="p-2 font-semibold">{s.name}</td>
-                <td className="p-2">{s.Class}</td>
-                <td className="p-2">{s.email}</td>
-                <td className="p-2">{s.phone}</td>
-                <td className="p-2">{s.state}</td>
-                <td className="p-2">{s.city}</td>
-                <td className="p-2">{s.institute}</td>
-                <td className="p-2 text-center">
-                  <FontAwesomeIcon 
+                <td className=" font-semibold">{s.name}</td>
+                <td className="">{s.Class}</td>
+                <td className="">{s.email}</td>
+                <td className="">{s.phone}</td>
+                <td className="">{s.state}</td>
+                <td className="">{s.city}</td>
+                <td className="">{s.institute}</td>
+                <td className=" text-center">
+                  <FontAwesomeIcon
                     icon={faCircle}
                     className={
                       s.Status === "pending"
@@ -221,13 +223,13 @@ function AdminStudent() {
                     }
                   />
                 </td>
-                <td className="p-2 flex gap-2">
+                <td className="p-1 flex">
                   <button
                     onClick={() => {
                       setSelectedStudent(s);
                       setShowEditModal(true);
                     }}
-                    className="bg-orange-300 px-2 py-1 rounded"
+                    className="text-blue-600 px-1 py-1 "
                   >
                     <FontAwesomeIcon icon={faPen} />
                   </button>
@@ -237,7 +239,7 @@ function AdminStudent() {
                       setSelectedStudent(s);
                       setShowDeleteModal(true);
                     }}
-                    className="bg-red-400 px-2 py-1 rounded"
+                    className="text-red-600 px-1 py-1 "
                   >
                     <FontAwesomeIcon icon={faTrash} />
                   </button>
@@ -271,8 +273,8 @@ function AdminStudent() {
                     disabled:opacity-40
                     disabled:cursor-not-allowed
                     disabled:hover:bg-transparent
-                  "       
-         >
+                  "
+          >
             &lt;
           </button>
           <button
@@ -284,8 +286,8 @@ function AdminStudent() {
                     disabled:opacity-40
                     disabled:cursor-not-allowed
                     disabled:hover:bg-transparent
-                  "      
-                      >
+                  "
+          >
             &gt;
           </button>
         </div>
