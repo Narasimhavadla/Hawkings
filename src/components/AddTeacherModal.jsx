@@ -23,6 +23,7 @@ export default function AddTeacherModal({ onClose, onSuccess }) {
     teachingType: "",
     teachingFrom: "",
     teachingTo: "",
+    role : "teacher"
   });
 
   const [loading, setLoading] = useState(false);

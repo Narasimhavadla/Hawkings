@@ -1,0 +1,47 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faChartLine,
+  faUserGraduate,
+  faUpload,
+  faIndianRupee,
+} from "@fortawesome/free-solid-svg-icons";
+
+const TeacherSidebar = ({ activeTab, setActiveTab }) => {
+  const authUser = JSON.parse(localStorage.getItem("authUser"));
+
+  const menu = [
+    { id: "dashboard", label: "Dashboard", icon: faChartLine },
+    { id: "students", label: "Students", icon: faUserGraduate },
+    { id: "bulkUpload", label: "Bulk Upload", icon: faUpload },
+    { id: "payment", label: "Payment", icon: faIndianRupee },
+  ];
+
+  return (
+    <aside className="w-64 bg-slate-900 text-white h-full">
+      <div className="p-3 text-xl font-bold border-b border-slate-700">
+        Hawking <span className="text-blue-400">Teacher</span>
+      </div>
+
+      <ul className="mt-2 space-y-1">
+        {menu.map((item) => (
+          <li
+            key={item.id}
+            onClick={() => setActiveTab(item.id)}
+            className={`flex items-center gap-3 px-6 py-2 cursor-pointer 
+              transition-all hover:bg-slate-800
+              ${
+                activeTab === item.id
+                  ? "bg-slate-800 border-l-4 border-blue-500"
+                  : ""
+              }`}
+          >
+            <FontAwesomeIcon icon={item.icon} />
+            <span>{item.label}</span>
+          </li>
+        ))}
+      </ul>
+    </aside>
+  );
+};
+
+export default TeacherSidebar;

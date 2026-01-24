@@ -10,6 +10,7 @@ import Aboutus from "./pages/aboutus";
 import MathsCompReg from "./pages/mathsCompReg";
 import ContactPage from "./pages/contactPage";
 import Login from "./pages/login";
+import TeacherLayout from "./teachers/TeacherLayout.JSX";
 
 function App() {
   const navigate = useNavigate();
@@ -45,6 +46,7 @@ function App() {
         {/* 🔒 Protected Routes */}
         <Route element={<ProtectedRoute />}>
           <Route path="/admin" element={<AdminLayout />} />
+          <Route path="/teacher" element={<TeacherLayout />} />
         </Route>
       </Routes>
 

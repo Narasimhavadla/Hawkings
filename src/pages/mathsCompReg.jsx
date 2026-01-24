@@ -54,6 +54,7 @@ const handleSubmitStudent = async (studentData) => {
       teachingFrom: teacherData.classFrom,
       teachingTo: teacherData.classTo,
       // Status: "pending" // only if backend later needs it
+      role : "teacher"
     };
 
     const response = await axios.post(

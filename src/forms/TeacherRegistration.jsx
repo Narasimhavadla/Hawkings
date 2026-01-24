@@ -14,7 +14,7 @@ export default function TeacherRegistration({ onSubmit, loading, successMessage 
   });
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setForm({ ...form,role:"teacher", [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e) => {

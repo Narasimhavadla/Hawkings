@@ -52,9 +52,13 @@ export default function Login() {
         })
       );
 
-      if (user.role === "superadmin" || user.role === "admin") {
+      if (user.role === "superadmin" || user.role === "admin" ) {
         navigate("/admin");
-      } else {
+      } 
+      else if(user.role === "teacher"){
+        navigate('/teacher')
+      }
+      else {
         navigate("/");
       }
     } catch (err) {
