@@ -7,10 +7,13 @@ import {
   faSchool,
   faLightbulb,
 } from "@fortawesome/free-solid-svg-icons";
+import RazorpayPayment from "./RazorpayPayment";
 
 function Aboutus() {
   return (
     <div className="bg-gray-50">
+
+      <RazorpayPayment />
 
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-indigo-900 to-purple-900 text-white py-16">

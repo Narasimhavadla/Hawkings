@@ -1,0 +1,328 @@
+import { useState, useMemo, useEffect } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPlus,
+  faStar,
+  faPen,
+  faTrash,
+  faArrowUpRightFromSquare,
+  faLinkSlash,
+} from "@fortawesome/free-solid-svg-icons";
+
+import StuDeleteModal from "../components/stuDelModal";
+import EditStudentModal from "../components/stuEditModal";
+import AddStudentModal from "../components/AddStudentModal"; 
+
+const API_URL = "http://localhost:3000/api/v1/student-testinomials";
+
+function AdminStuTest() {
+  /* ------------------ STATE ------------------ */
+  const [testimonials, setTestimonials] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const [search, setSearch] = useState("");
+  const [itemsPerPage, setItemsPerPage] = useState(15);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  // const [showAddModal, setShowAddModal] = useState(false);
+    const [showAdd, setShowAdd] = useState(false);
+
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [selectedId, setSelectedId] = useState(null);
+
+  /* ------------------ FETCH ------------------ */
+  const fetchTestimonials = async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      const res = await axios.get(API_URL);
+      setTestimonials(res.data.data || []);
+    } catch (err) {
+      setError("Failed to fetch student testimonials");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTestimonials();
+  }, []);
+
+  /* ------------------ FILTER ------------------ */
+  const filteredData = useMemo(() => {
+    return testimonials.filter((t) =>
+      Object.values(t)
+        .join(" ")
+        .toLowerCase()
+        .includes(search.toLowerCase())
+    );
+  }, [search, testimonials]);
+
+  /* ------------------ PAGINATION ------------------ */
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
+  const paginatedData = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    return filteredData.slice(start, start + itemsPerPage);
+  }, [filteredData, currentPage, itemsPerPage]);
+
+  /* ------------------ TOGGLE PUBLISH ------------------ */
+  const togglePublish = async (id) => {
+    try {
+      await axios.patch(`${API_URL}/${id}/toggle`);
+      toast.success("Status updated");
+      fetchTestimonials();
+    } catch (err) {
+      if (err.response?.status === 400) {
+        toast.warning("Only 4 student testimonials can be displayed");
+      } else {
+        toast.error("Failed to update status");
+      }
+    }
+  };
+
+  return (
+    <div className="bg-white rounded-xl shadow p-4">
+      {/* HEADER */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-4">
+        <input
+          type="text"
+          placeholder="Search testimonials..."
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setCurrentPage(1);
+          }}
+          className="border px-3 py-2 rounded w-full lg:w-64 focus:ring focus:outline-none"
+        />
+
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 text-sm">
+            <span>Items per page:</span>
+            <select
+              value={itemsPerPage}
+              onChange={(e) => {
+                setItemsPerPage(Number(e.target.value));
+                setCurrentPage(1);
+              }}
+              className="border rounded px-2 py-1"
+            >
+              <option value={5}>5</option>
+              <option value={10}>10</option>
+              <option value={15}>15</option>
+            </select>
+          </div>
+          <button className="bg-blue-600 px-3 py-1 text-white text-xl rounded"
+          onClick={() => setShowAdd(true)}
+          >
+            <FontAwesomeIcon icon={faPlus}/>
+             Add
+            </button>
+
+          {/* ADD BUTTON (optional) */}
+          {/* 
+          <button
+            className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
+            onClick={() => setShowAddModal(true)}
+          >
+            <FontAwesomeIcon icon={faPlus} />
+            ADD
+          </button>
+          */}
+        </div>
+      </div>
+
+      {/* TABLE */}
+      {loading ? (
+        <div className="py-16 text-center text-gray-500">Loading...</div>
+      ) : error ? (
+        <div className="py-16 text-center text-red-500">{error}</div>
+      ) : paginatedData.length > 0 ? (
+        <div className="overflow-x-auto hidden md:block">
+          <table className="min-w-full text-sm">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="p-2 text-left">Name</th>
+                <th className="p-2 text-left">Content</th>
+                <th className="p-2 text-left">Rating</th>
+                <th className="p-2 text-left">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {paginatedData.map((t) => (
+                <tr key={t.id} className="hover:bg-gray-50 border-t">
+                  <td className="p-2 font-medium">{t.name}</td>
+                  <td className="p-2 text-gray-600">{t.content}</td>
+                  <td className="p-2">
+                    <div className="flex gap-1 text-yellow-500">
+                      {Array.from({ length: t.rating }).map((_, i) => (
+                        <FontAwesomeIcon key={i} icon={faStar} />
+                      ))}
+                    </div>
+                  </td>
+                  <td className="p-2">
+                    <div className="flex gap-3">
+                      <button
+                        className="text-indigo-600 hover:text-indigo-800"
+                        onClick={() => {
+                          setSelectedStudent(t);
+                          setShowEditModal(true);
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faPen} />
+                      </button>
+
+                      <button
+                        className="text-red-600 hover:text-red-800"
+                        onClick={() => {
+                          setSelectedId(t.id);
+                          setShowDeleteModal(true);
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faTrash} />
+                      </button>
+
+                      <button
+                        className={`${
+                          t.isPublished
+                            ? "text-red-600"
+                            : "text-blue-600"
+                        }`}
+                        onClick={() => togglePublish(t.id)}
+                      >
+                        <FontAwesomeIcon
+                          icon={
+                            t.isPublished
+                              ? faLinkSlash
+                              : faArrowUpRightFromSquare
+                          }
+                        />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div className="py-16 text-center text-gray-500">
+          <p className="text-lg font-semibold">No Student Testimonials Found</p>
+        </div>
+      )}
+
+      {/* MOBILE VIEW */}
+      <div className="md:hidden space-y-4">
+        {paginatedData.map((t) => (
+          <div key={t.id} className="border rounded-lg p-4 shadow-sm">
+            <div className="flex justify-between items-center">
+              <h3 className="font-semibold">{t.name}</h3>
+              <div className="flex gap-2">
+                <button
+                  className="text-indigo-600"
+                  onClick={() => {
+                    setSelectedStudent(t);
+                    setShowEditModal(true);
+                  }}
+                >
+                  <FontAwesomeIcon icon={faPen} />
+                </button>
+                <button
+                  className="text-red-600"
+                  onClick={() => {
+                    setSelectedId(t.id);
+                    setShowDeleteModal(true);
+                  }}
+                >
+                  <FontAwesomeIcon icon={faTrash} />
+                </button>
+                <button
+                  className={`${
+                    t.isPublished ? "text-red-600" : "text-blue-600"
+                  }`}
+                  onClick={() => togglePublish(t.id)}
+                >
+                  <FontAwesomeIcon
+                    icon={
+                      t.isPublished
+                        ? faLinkSlash
+                        : faArrowUpRightFromSquare
+                    }
+                  />
+                </button>
+              </div>
+            </div>
+
+            <p className="text-gray-600 mt-2 text-sm">{t.content}</p>
+
+            <div className="flex gap-1 text-yellow-500 mt-2">
+              {Array.from({ length: t.rating }).map((_, i) => (
+                <FontAwesomeIcon key={i} icon={faStar} />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* PAGINATION */}
+      {paginatedData.length > 0 && (
+        <div className="flex items-center justify-between mt-4 text-sm">
+          <span>
+            Page {currentPage} of {totalPages}
+          </span>
+
+          <div className="flex gap-2">
+            <button
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((p) => p - 1)}
+              className="px-3 py-1 border rounded disabled:opacity-40"
+            >
+              &lt;
+            </button>
+            <button
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage((p) => p + 1)}
+              className="px-3 py-1 border rounded disabled:opacity-40"
+            >
+              &gt;
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showAdd && 
+      <AddStudentTestimonialModal
+        isOpen={showAdd}
+        onClose={() => setShowAdd(false)}
+        onSuccess={fetchTestimonials} 
+      />
+      }
+
+      {/* MODALS */}
+      {showEditModal && (
+        <EditStudentModal
+          student={selectedStudent}
+          onClose={() => setShowEditModal(false)}
+          onSuccess={fetchTestimonials}
+        />
+      )}
+
+      {showDeleteModal && (
+        <StuDeleteModal
+          id={selectedId}
+          onClose={() => setShowDeleteModal(false)}
+          onSuccess={fetchTestimonials}
+        />
+      )}
+    </div>
+  );
+}
+
+export default AdminStuTest;

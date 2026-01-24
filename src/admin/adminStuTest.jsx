@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -6,14 +7,16 @@ import {
   faPen,
   faTrash,
   faStar,
+   faArrowUpRightFromSquare,
+  faLinkSlash,
 } from "@fortawesome/free-solid-svg-icons";
+import { toast } from "react-toastify";
 
 import AddStudentTestimonialModal from "../components/AddStuTestModal";
 import EditStudentTestimonialModal from "../components/EditStuTestModal";
 import DeleteConfirmModal from "../components/DelStuTestModal";
 
 const API_URL = "http://localhost:3000/api/v1/student-testinomials"; 
-// 🔁 change to your actual endpoint
 
 function AdminStuTest() {
   const [data, setData] = useState([]);
@@ -28,7 +31,6 @@ function AdminStuTest() {
 
   const [selectTest,setSelectTest] = useState(null)
 
-  /* ================= FETCH DATA ================= */
   const fetchTestimonials = async () => {
     try {
       setLoading(true);
@@ -36,7 +38,6 @@ function AdminStuTest() {
 
       const res = await axios.get(API_URL);
 
-      // ✅ adjust if your API response structure is different
       setData(res.data.data || res.data);
     } catch (err) {
       console.error(err);
@@ -49,6 +50,20 @@ function AdminStuTest() {
   useEffect(() => {
     fetchTestimonials();
   }, []);
+
+  const togglePublish = async (id) => {
+    try {
+      await axios.patch(`${API_URL}/${id}/toggle`);
+      toast.success("Status updated");
+      fetchTestimonials();
+    } catch (err) {
+      if (err.response?.status === 400) {
+        toast.warning("Only 4 student testimonials can be displayed");
+      } else {
+        toast.error("Failed to update status");
+      }
+    }
+  };
 
   return (
     <div className="p-3 md:p-6">
@@ -140,6 +155,23 @@ function AdminStuTest() {
                     >
                       <FontAwesomeIcon icon={faTrash} />
                     </button>
+                    <button 
+                        className={`${
+                          item.isPublished
+                            ? "text-red-600"
+                            : "text-blue-600"
+                        }`}
+                        onClick={() => togglePublish(item.id)}
+                      >
+                        <FontAwesomeIcon
+                          icon={
+                            item.isPublished
+                              ? faLinkSlash
+                              : faArrowUpRightFromSquare
+                          }
+                        />
+                      </button>
+
                   </td>
                 </tr>
               ))

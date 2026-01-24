@@ -40,7 +40,7 @@ function LandingPage() {
 
         {/* LEVEL 1 */}
         <div className="sticky top-36 w-[80%] md:w-[70%] mx-auto">
-          <div className="bg-gradient-to-br from-purple-400 to-purple-600 
+          <div className="bg-gradient-to-l from-purple-500 to-purple-600 
                           text-white rounded-3xl p-8 shadow-2xl
                           transition-all duration-300 hover:scale-[1.02]">
             <h2 className="text-3xl font-bold mb-4 text-center">Level 1</h2>
@@ -64,7 +64,7 @@ function LandingPage() {
 
         {/* LEVEL 2 */}
         <div className="sticky top-40 w-[80%] md:w-[70%] mx-auto">
-          <div className="bg-gradient-to-br from-green-400 to-green-600 
+          <div className="bg-gradient-to-bl from-green-500 to-green-600 
                           text-white rounded-3xl p-8 shadow-2xl
                           transition-all duration-300 hover:scale-[1.02]">
             <h2 className="text-3xl font-bold mb-4 text-center">Level 2</h2>
@@ -88,7 +88,7 @@ function LandingPage() {
 
         {/* FINAL ROUND */}
         <div className="sticky top-44 w-[80%] md:w-[70%] mx-auto">
-          <div className="bg-gradient-to-br from-orange-400 to-red-500 
+          <div className="bg-gradient-to-br from-orange-500 to-red-600 
                           text-white rounded-3xl p-8 shadow-2xl
                           transition-all duration-300 hover:scale-[1.02]">
             <h2 className="text-3xl font-bold mb-4 text-center">
@@ -114,24 +114,46 @@ function LandingPage() {
         {/* leve-4 */}
 
       </div>
-       <div className="w-[80%] md:w-[70%] mx-auto mt-6">
-          <div className="bg-gradient-to-br from-blue-400 to-blue-500 
-                          text-white rounded-3xl p-8 shadow-2xl
-                          transition-all duration-300  ">
-            {/* <h2 className="text-3xl font-bold mb-4 text-center">
-              Final Round
-            </h2> */}
+      <div className="w-[90%] md:w-[70%] mx-auto mt-10">
+  <div
+    className="bg-gradient-to-r from-blue-500 to-indigo-600 
+               text-white rounded-2xl p-8 md:p-10 
+               shadow-xl"
+  >
+    <div className="grid md:grid-cols-2 gap-6 items-center">
+      
+      {/* Left Content */}
+      <div>
+        <h2 className="text-2xl md:text-3xl font-bold mb-2">
+          Registration Fee
+        </h2>
+        <p className="text-lg md:text-xl font-medium">
+          Just <span className="text-yellow-300">₹1.00</span> only
+        </p>
+        <p className="text-sm mt-2 text-blue-100">
+          Less than the cost of a slice of pizza  — participate and prove your math skills!
+        </p>
+      </div>
 
-            <div className="grid md:grid-cols-2 gap-6 text-lg items-center h-36 ">
+      {/* Right CTA */}
+      <div className="flex md:justify-end">
+        <a
+          href="/maths-competetion-registration"
+          className="inline-flex items-center justify-center
+                     bg-white text-blue-600 font-semibold
+                     px-8 py-3 rounded-xl
+                     shadow-md hover:shadow-lg
+                     hover:bg-blue-50
+                     transition-all duration-300"
+        >
+          Apply Now
+        </a>
+      </div>
 
-                <h1>Registration Fee ₹1.00/- only which is less than a pizza.</h1>
-                <div className="bg-white/20 rounded-xl p-4 content-center border w-40">
-                    
-                    <a href="/maths-competetion-registration" className="font-semibold px-4 mx-auto  " >Apply now</a>
-                </div>
-            </div>
-          </div>
-        </div>
+    </div>
+  </div>
+</div>
+
       
       <RewardsSection />
       <ExamScheduleComp />

@@ -56,14 +56,14 @@ export default function WelcomeModal() {
           <div className="flex justify-center gap-3 mb-6">
             <span className="bg-white/20 px-4 py-1 rounded-full text-sm">
               <FontAwesomeIcon icon={faStar} className="mr-1 text-yellow-300" />
-              Grades 1 – 10
+              Grades 4 – 9
             </span>
             <span className="bg-white/20 px-4 py-1 rounded-full text-sm">
               National Level
             </span>
           </div>
 
-          <a href="/maths-competetion-registration" 
+          <a href="/maths-competetion-registration"  onClick={closeModal}
             className="w-full sm:w-auto bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold px-8 py-3 rounded-full transition-transform hover:scale-105"
           >
             Register Now
