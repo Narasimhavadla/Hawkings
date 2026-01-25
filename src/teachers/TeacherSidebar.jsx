@@ -4,6 +4,7 @@ import {
   faUserGraduate,
   faUpload,
   faIndianRupee,
+  faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 
 const TeacherSidebar = ({ activeTab, setActiveTab }) => {
@@ -11,9 +12,10 @@ const TeacherSidebar = ({ activeTab, setActiveTab }) => {
 
   const menu = [
     { id: "dashboard", label: "Dashboard", icon: faChartLine },
-    { id: "students", label: "Students", icon: faUserGraduate },
+    { id: "students", label: "Register Students", icon: faUserGraduate },
     { id: "bulkUpload", label: "Bulk Upload", icon: faUpload },
     { id: "payment", label: "Payment", icon: faIndianRupee },
+    { id: "reffer", label: "Reffer", icon: faPlus },
   ];
 
   return (

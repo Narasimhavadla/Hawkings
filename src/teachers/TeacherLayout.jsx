@@ -11,6 +11,7 @@ import TeacherStudents from "./TeacherStudents";
 import TeacherBulkUpload from "./TeacherBulkUpload";
 import TeacherPayment from "./TeacherPayment";
 import TeacherSidebar from "./teacherSidebar";
+import TeacherReffer from "./TeacherReffer";
 
 const TeacherLayout = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -46,6 +47,8 @@ const TeacherLayout = () => {
         return <TeacherBulkUpload />;
       case "payment":
         return <TeacherPayment />;
+      case "reffer":
+        return <TeacherReffer />;
       default:
         return <TeacherDashboard />;
     }
