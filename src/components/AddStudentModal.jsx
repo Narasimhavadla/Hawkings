@@ -30,6 +30,8 @@ export default function AddStudentModal({ onClose, refresh }) {
     city: "",
     pincode: "",
     Status: "pending",
+    examId : 0,
+    teacherId : 0
   });
 
   const handleChange = (e) => {

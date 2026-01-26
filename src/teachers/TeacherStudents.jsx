@@ -1,30 +1,17 @@
-import { useState } from "react";
+import { faCheck, faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 
 export default function TeacherStudents() {
   const [selectedExam, setSelectedExam] = useState(null);
   const [forms, setForms] = useState([initialForm()]);
+  const [loading, setLoading] = useState(false);
+  const [exams, setExams] = useState([]);
+  const [examLoading, setExamLoading] = useState(false);
+  const [examError, setExamError] = useState(null);
 
-  const exams = [
-    {
-      id: 1,
-      name: "Hawking Maths Olympiad – Level 1",
-      classes: "Class 4 – 6",
-      fee: "₹150 / student",
-    },
-    {
-      id: 2,
-      name: "Hawking Junior Maths Challenge",
-      classes: "Class 3 – 5",
-      fee: "₹120 / student",
-    },
-    {
-      id: 3,
-      name: "Hawking Senior Maths Olympiad",
-      classes: "Class 7 – 9",
-      fee: "₹200 / student",
-    },
-  ];
-
+  /* ================= INITIAL FORM ================= */
   function initialForm() {
     return {
       Class: "",
@@ -38,25 +25,108 @@ export default function TeacherStudents() {
       state: "",
       city: "",
       pincode: "",
-      Status: "pending",
+      Status: "pending", // ✅ ALWAYS pending
+      teacherId: 1,
     };
   }
 
+  /* ================= FETCH EXAMS ================= */
+  useEffect(() => {
+    fetchExams();
+  }, []);
+
+  const fetchExams = async () => {
+    try {
+      setExamLoading(true);
+      setExamError(null);
+      const res = await fetch("http://localhost:3000/api/v1/exam-schedule");
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.message || "Failed to fetch exams");
+
+      // Filter only active exams
+      const activeExams = data.data.filter((e) => e.status === "active");
+
+      setExams(activeExams);
+    } catch (err) {
+      console.error(err);
+      setExamError("Failed to load exams");
+    } finally {
+      setExamLoading(false);
+    }
+  };
+
+  /* ================= ACTIONS ================= */
   const selectExam = (exam) => {
     setSelectedExam(exam);
-    setForms([initialForm()]); // reset forms when exam changes
+    setForms([initialForm()]);
   };
 
   const handleChange = (index, e) => {
     const updated = [...forms];
-    updated[index][e.target.name] = e.target.value;
+    updated[index] = {
+      ...updated[index],
+      [e.target.name]: e.target.value,
+      Status: "pending", // 🔒 enforce pending
+    };
     setForms(updated);
   };
 
   const addForm = () => setForms([...forms, initialForm()]);
-  const removeForm = (index) =>
-    setForms(forms.filter((_, i) => i !== index));
+  const removeForm = (index) => setForms(forms.filter((_, i) => i !== index));
 
+  const totalAmount = selectedExam ? forms.length * selectedExam.amount : 0;
+
+  /* ================= SUBMIT ================= */
+  const handleSubmitAll = async () => {
+    if (!selectedExam) {
+      alert("Please select an exam");
+      return;
+    }
+
+    for (let i = 0; i < forms.length; i++) {
+      if (!forms[i].name || !forms[i].Class || !forms[i].phone) {
+        alert(`Please fill required fields for Student ${i + 1}`);
+        return;
+      }
+    }
+
+    setLoading(true);
+
+    try {
+      const payload = {
+        examId: selectedExam.id,
+        teacherId: 1,
+        students: forms.map((s) => ({ ...s, Status: "pending" })),
+      };
+
+      const res = await fetch(
+        "http://localhost:3000/api/v1/student/bulk",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message || "Failed to register students");
+        return;
+      }
+
+      toast.success(`${data.meta.totalInserted} Registered Successfully`);
+      setForms([initialForm()]);
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /* ================= UI ================= */
   return (
     <div className="min-h-screen bg-gray-100 p-4 md:p-8">
       <div className="mx-auto max-w-6xl">
@@ -64,11 +134,18 @@ export default function TeacherStudents() {
           Register Students – Hawking Maths Olympiad
         </h1>
 
-        {/* ================= EXAM CARDS ================= */}
+        {/* ========== EXAM SELECTION ========== */}
         <div className="mb-8">
-          <h2 className="mb-4 text-lg font-semibold">
-            Select Exam
-          </h2>
+          <h2 className="mb-4 text-lg font-semibold">Select Exam</h2>
+
+          {examLoading && (
+            <div className="text-indigo-600 font-semibold py-2">
+              Loading exams...
+            </div>
+          )}
+          {examError && (
+            <div className="text-red-500 font-semibold py-2">{examError}</div>
+          )}
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {exams.map((exam) => {
@@ -78,42 +155,45 @@ export default function TeacherStudents() {
                 <div
                   key={exam.id}
                   onClick={() => selectExam(exam)}
-                  className={`cursor-pointer rounded-2xl border p-5 shadow transition
-                    ${
-                      active
-                        ? "border-indigo-600 bg-indigo-50"
-                        : "bg-white hover:border-indigo-400"
-                    }`}
-                >
-                  <h3 className="mb-2 text-lg font-semibold">
-                    {exam.name}
-                  </h3>
-                  <p className="text-sm text-gray-600">
-                    Eligible: {exam.classes}
-                  </p>
-                  <p className="mt-2 text-sm font-medium text-indigo-600">
-                    Fee: {exam.fee}
-                  </p>
+                  className={`
+                    relative cursor-pointer rounded-2xl border-2 p-5 shadow-md transition-all duration-300
+                    transform hover:-translate-y-1 hover:shadow-xl
+                    ${active ? "border-indigo-600 bg-gradient-to-r from-indigo-50 to-indigo-100" : "border-gray-200 bg-white hover:border-indigo-400"}
+                  `}>
+                    {/* Selected Badge */}
+                    {active && (
+                      <span className="absolute top-3 right-3 flex items-center gap-1 rounded-full bg-indigo-600 px-3 py-1 text-xs text-white font-semibold shadow">
+                        <FontAwesomeIcon icon={faCheck} /> Selected
+                      </span>
+                    )}
 
-                  {active && (
-                    <span className="mt-3 inline-block rounded-full bg-indigo-600 px-4 py-1 text-xs text-white">
-                      Selected
-                    </span>
-                  )}
+                    {/* Exam Name */}
+                    <h3 className="mb-3 text-lg font-bold text-gray-800">{exam.name}</h3>
+
+                    {/* Fee */}
+                    <p className="mt-2 text-sm font-medium text-indigo-600">
+                      Fee: ₹{exam.amount}
+                    </p>
+
+                    {/* Hover hint */}
+                    <p className="mt-1 text-xs text-gray-400">
+                      Click to select this exam
+                    </p>
                 </div>
+
               );
             })}
           </div>
         </div>
 
-        {/* ================= STUDENT FORMS ================= */}
+        {/* ========== FORMS ========== */}
         {selectedExam && (
           <>
-            <div className="mb-4 rounded-xl bg-indigo-600 p-4 text-white">
-              <p className="text-sm">Selected Exam</p>
-              <h3 className="text-lg font-semibold">
-                {selectedExam.name}
-              </h3>
+            <div className="mb-6 rounded-xl bg-indigo-600 p-4 text-white">
+              <h3 className="text-lg font-semibold">{selectedExam.name}</h3>
+              <p className="text-sm">
+                Students: {forms.length} | Total Amount: ₹{totalAmount}
+              </p>
             </div>
 
             {forms.map((form, index) => (
@@ -122,22 +202,21 @@ export default function TeacherStudents() {
                 className="mb-6 rounded-2xl bg-white p-6 shadow"
               >
                 <div className="mb-4 flex items-center justify-between">
-                  <h2 className="font-semibold">
-                    Student {index + 1}
-                  </h2>
+                  <h2 className="font-semibold">Student {index + 1}</h2>
+
                   <div className="flex gap-2">
                     <button
                       onClick={addForm}
-                      className="rounded-full bg-green-500 px-3 py-1 text-white"
+                      className="rounded-full bg-green-500 px-2 py-1 text-white"
                     >
-                      +
-                    </button>
+                      <FontAwesomeIcon icon={faPlus} />
+                    </button> 
                     {forms.length > 1 && (
                       <button
                         onClick={() => removeForm(index)}
-                        className="rounded-full bg-red-500 px-3 py-1 text-white"
+                        className="rounded-full bg-red-500 px-2 py-1 text-white"
                       >
-                        −
+                        <FontAwesomeIcon icon={faMinus} />
                       </button>
                     )}
                   </div>
@@ -156,26 +235,20 @@ export default function TeacherStudents() {
                     value={form.fathername}
                     onChange={(e) => handleChange(index, e)}
                   />
-
-                  <div className="flex flex-col">
-                    <label className="mb-1 text-sm text-gray-600">
-                      Class
-                    </label>
-                    <select
-                      name="Class"
-                      value={form.Class}
-                      onChange={(e) => handleChange(index, e)}
-                      className="h-11 rounded-lg border px-3"
-                    >
-                      <option value="">Select Class</option>
-                      {[4, 5, 6, 7, 8, 9].map((c) => (
-                        <option key={c} value={`Class-${c}`}>
-                          Class {c}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
+                  <SelectField
+                    label="Class"
+                    name="Class"
+                    value={form.Class}
+                    onChange={(e) => handleChange(index, e)}
+                    options={[
+                      "Class-4",
+                      "Class-5",
+                      "Class-6",
+                      "Class-7",
+                      "Class-8",
+                      "Class-9",
+                    ]}
+                  />
                   <Field
                     label="Email"
                     name="email"
@@ -194,11 +267,10 @@ export default function TeacherStudents() {
                     value={form.altphone}
                     onChange={(e) => handleChange(index, e)}
                   />
-
                   <Field
                     label="Date of Birth"
-                    name="dob"
                     type="date"
+                    name="dob"
                     value={form.dob}
                     onChange={(e) => handleChange(index, e)}
                   />
@@ -230,10 +302,13 @@ export default function TeacherStudents() {
               </div>
             ))}
 
-            {/* ================= SUBMIT ================= */}
             <div className="flex justify-end">
-              <button className="rounded-xl bg-indigo-600 px-6 py-3 text-white shadow">
-                Submit All Students
+              <button
+                onClick={handleSubmitAll}
+                disabled={loading}
+                className="rounded-xl bg-indigo-600 px-8 py-3 text-white shadow disabled:opacity-60"
+              >
+                {loading ? "Submitting..." : "Submit All Students"}
               </button>
             </div>
           </>
@@ -243,14 +318,11 @@ export default function TeacherStudents() {
   );
 }
 
-/* ================= FIELD COMPONENT ================= */
-
+/* ================= REUSABLE COMPONENTS ================= */
 function Field({ label, name, value, onChange, type = "text" }) {
   return (
     <div className="flex flex-col">
-      <label className="mb-1 text-sm text-gray-600">
-        {label}
-      </label>
+      <label className="mb-1 text-sm text-gray-600">{label}</label>
       <input
         type={type}
         name={name}
@@ -258,6 +330,27 @@ function Field({ label, name, value, onChange, type = "text" }) {
         onChange={onChange}
         className="h-11 rounded-lg border px-3 focus:border-indigo-500 focus:outline-none"
       />
+    </div>
+  );
+}
+
+function SelectField({ label, name, value, onChange, options }) {
+  return (
+    <div className="flex flex-col">
+      <label className="mb-1 text-sm text-gray-600">{label}</label>
+      <select
+        name={name}
+        value={value}
+        onChange={onChange}
+        className="h-11 rounded-lg border px-3"
+      >
+        <option value="">Select</option>
+        {options.map((opt) => (
+          <option key={opt} value={opt}>
+            {opt}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }

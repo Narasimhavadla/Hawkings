@@ -183,7 +183,7 @@ function AdminStudent() {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-xl">
+      <div className="overflow-x-auto rounded-xl mt-8">
         <table className="min-w-full text-sm">
           <thead className="bg-gray-200">
             <tr>
@@ -206,7 +206,7 @@ function AdminStudent() {
                 <td className="px-4">
                   {(currentPage - 1) * itemsPerPage + index + 1}
                 </td>
-                <td className=" font-semibold">{s.name}</td>
+                <td className={` font-semibold`}><span className={` ${s.teacherId == 0 ? 'bg-blue-100 rounded-xl px-3 py-1' : 'text-black '} `}>{s.name}</span></td>
                 <td className="">{s.Class}</td>
                 <td className="">{s.email}</td>
                 <td className="">{s.phone}</td>

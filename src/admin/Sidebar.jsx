@@ -38,7 +38,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
   ];
 
   return (
-    <aside className="w-64 bg-slate-900 text-white h-full">
+    <aside className="w-64 bg-slate-900 text-white h-full ">
       <div className="p-3 text-xl font-bold border-b border-slate-700">
         Hawking <span>{role == "superadmin" ? <span className="text-red-600">Super Admin</span> : <span className="text-green-500">Admin</span>}</span>
       </div>
