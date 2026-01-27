@@ -104,7 +104,7 @@ function Navbar() {
           {authUser ? (
             <button
               onClick={handleLogout}
-              className="px-4 py-2 bg-red-600 rounded hover:bg-red-700 transition font-bold"
+              className="px-4 py-2 bg-red-500 rounded hover:bg-red-700 transition font-bold"
             >
               Logout
             </button>

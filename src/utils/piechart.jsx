@@ -9,12 +9,12 @@ import {
 } from "recharts";
 
 const gradients = [
-  { id: "g1", from: "#60a5fa", to: "#2563eb" },
-  { id: "g2", from: "#4ade80", to: "#16a34a" },
-  { id: "g3", from: "#fb923c", to: "#ea580c" },
-  { id: "g4", from: "#c084fc", to: "#7c3aed" },
-  { id: "g5", from: "#fde047", to: "#ca8a04" },
-  { id: "g6", from: "#f87171", to: "#dc2626" },
+  { id: "g1", from: "#60a5fa", to: "#4f46e5" },
+  { id: "g2", from: "#6366f1", to: "#6366f1" },
+  { id: "g3", from: "#818cf8", to: "#818cf8" },
+  { id: "g4", from: "#a5b4fc", to: "#a5b4fc" },
+  { id: "g5", from: "#c7d2fe", to: "#c7d2fe" },
+  { id: "g6", from: "#e0e7ff", to: "#e0e7ff" },
 ];
 
 export default function StudentsPieChart() {

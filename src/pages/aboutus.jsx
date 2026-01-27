@@ -13,7 +13,20 @@ function Aboutus() {
   return (
     <div className="bg-gray-50">
 
-      <RazorpayPayment />
+            {/* Test Payment Section */}
+        <section className="bg-white py-12">
+          <div className="max-w-4xl mx-auto text-center px-6">
+            <h2 className="text-2xl md:text-3xl font-bold mb-4">
+              Try Our Payment Gateway
+            </h2>
+            <p className="text-gray-600 mb-6">
+              Make a ₹1 test payment to experience our secure Razorpay checkout.
+            </p>
+
+            <RazorpayPayment />
+          </div>
+        </section>
+
 
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-indigo-900 to-purple-900 text-white py-16">

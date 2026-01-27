@@ -11,8 +11,14 @@ export default function TeacherStudents() {
   const [examLoading, setExamLoading] = useState(false);
   const [examError, setExamError] = useState(null);
 
+  const authUser = JSON.parse(localStorage.getItem("authUser"));
+  const teacherId = authUser?.id;
+
   /* ================= INITIAL FORM ================= */
   function initialForm() {
+
+    
+
     return {
       Class: "",
       name: "",
@@ -25,8 +31,8 @@ export default function TeacherStudents() {
       state: "",
       city: "",
       pincode: "",
-      Status: "pending", // ✅ ALWAYS pending
-      teacherId: 1,
+      Status: "pending" 
+      
     };
   }
 
@@ -95,10 +101,14 @@ export default function TeacherStudents() {
 
     try {
       const payload = {
-        examId: selectedExam.id,
-        teacherId: 1,
-        students: forms.map((s) => ({ ...s, Status: "pending" })),
-      };
+      examId: selectedExam.id,
+      teacherId: teacherId, 
+      students: forms.map((s) => ({
+        ...s,
+        teacherId: teacherId, 
+        Status: "pending",
+      })),
+    };
 
       const res = await fetch(
         "http://localhost:3000/api/v1/student/bulk",

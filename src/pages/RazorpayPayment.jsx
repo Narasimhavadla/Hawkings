@@ -9,16 +9,12 @@ function RazorpayPayment() {
       );
 
       const options = {
-        key: "rzp_test_vOZUvDyrjBiM7a",
+        key: "rzp_test_S8sJNP1bvQjOn8",
         amount: order.amount,
         currency: "INR",
-        name: "My Website",
-        description: "UPI Test Payment",
+        name: "Hawkings Maths Olympiad",
+        description: "₹1 Test Payment",
         order_id: order.id,
-
-        method: {
-          upi: true,
-        },
 
         handler: async function (response) {
           const verifyRes = await axios.post(
@@ -34,15 +30,25 @@ function RazorpayPayment() {
           if (verifyRes.data.success) {
             alert("✅ Payment Successful");
           } else {
-            alert("❌ Verification failed");
+            alert("❌ Payment Verification Failed");
           }
+        },
+
+        prefill: {
+          name: "Test Student",
+          email: "test@student.com",
+          contact: "9999999999",
+        },
+
+        theme: {
+          color: "#4f46e5",
         },
       };
 
       const rzp = new window.Razorpay(options);
       rzp.open();
     } catch (err) {
-      console.error("Payment error:", err.response?.data || err);
+      console.error("Payment error:", err);
       alert("Something went wrong");
     }
   };
@@ -50,9 +56,10 @@ function RazorpayPayment() {
   return (
     <button
       onClick={handlePayment}
-      className="bg-blue-600 text-white px-4 py-2 rounded"
+      className="bg-indigo-600 hover:bg-indigo-700 text-white 
+                 px-6 py-3 rounded-xl font-semibold shadow-lg"
     >
-      Pay ₹1 via UPI
+      Pay ₹1 (Test Payment)
     </button>
   );
 }

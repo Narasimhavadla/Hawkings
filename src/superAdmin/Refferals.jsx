@@ -83,9 +83,9 @@ export default function Referrals() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4 md:p-8">
+    <div className="min-h-screen bg-gray-100 p-4 md:p-4">
       <div className="mx-auto max-w-7xl">
-        <h1 className="mb-6 text-2xl font-bold">Referral Dashboard</h1>
+        <h1 className="mb-4 text-2xl font-bold">Referral Dashboard</h1>
 
         {/* SEARCH & FILTER */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
@@ -94,12 +94,12 @@ export default function Referrals() {
             placeholder="Search by referrer, referred, code..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="rounded-lg border px-3 py-2 w-full md:w-1/2"
+            className="rounded-lg border px-3 py-1 w-full md:w-1/2"
           />
           <select 
             value={filterStatus} 
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="rounded-lg border px-3 py-2 w-full md:w-1/4"
+            className="rounded-lg border px-3 py-1 w-full md:w-1/4"
           >
             <option value="">All Status</option>
             <option value="Used">Used</option>
@@ -108,7 +108,7 @@ export default function Referrals() {
           </select>
           <button 
             onClick={exportToExcel} 
-            className="bg-indigo-600 text-white px-4 py-2 rounded-lg shadow"
+            className="bg-indigo-600 text-white px-4 py-1 rounded-lg shadow"
           >
             Export Excel
           </button>
@@ -122,7 +122,7 @@ export default function Referrals() {
                 <tr>
                   <th onClick={() => requestSort("referrer")} className="cursor-pointer border-b px-4 py-3 font-semibold text-gray-600">Referrer</th>
                   <th onClick={() => requestSort("referred")} className="cursor-pointer border-b px-4 py-3 font-semibold text-gray-600">Referred</th>
-                  <th onClick={() => requestSort("referralCode")} className="cursor-pointer border-b px-4 py-3 font-semibold text-gray-600">Referral Code</th>
+                  <th onClick={() => requestSort("referralCode")} className="cursor-pointer border-b px-4 py-3 font-semibold text-gray-600 ">Referral Code</th>
                   <th onClick={() => requestSort("dateUsed")} className="cursor-pointer border-b px-4 py-3 font-semibold text-gray-600">Date Used</th>
                   <th onClick={() => requestSort("paymentByReferred")} className="cursor-pointer border-b px-4 py-3 font-semibold text-gray-600">Payment Made</th>
                   <th onClick={() => requestSort("cashbackReceived")} className="cursor-pointer border-b px-4 py-3 font-semibold text-gray-600">Cashback</th>
@@ -134,7 +134,7 @@ export default function Referrals() {
                   <tr key={i} className={i%2===0?"bg-white":"bg-gray-50"}>
                     <td className="border-b px-4 py-2">{item.referrer}</td>
                     <td className="border-b px-4 py-2">{item.referred}</td>
-                    <td className="border-b px-4 py-2 font-mono text-indigo-600">{item.referralCode}</td>
+                    <td className="border-b px-4 py-2 font-mono text-indigo-800 font-semibold"><span className="bg-indigo-200 px-2 rounded">{item.referralCode}</span></td>
                     <td className="border-b px-4 py-2">{item.dateUsed}</td>
                     <td className="border-b px-4 py-2">₹{item.paymentByReferred}</td>
                     <td className="border-b px-4 py-2 text-green-600 font-semibold">₹{item.cashbackReceived}</td>

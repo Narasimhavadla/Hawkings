@@ -14,8 +14,10 @@ export default function TeacherBulkUpload() {
   const [examLoading, setExamLoading] = useState(false);
   const [examError, setExamError] = useState(null);
 
-  const teacherId = 1; // 🔒 default teacher
+  // const teacherId = 1; 
 
+const authUser = JSON.parse(localStorage.getItem("authUser"));
+const teacherId = authUser?.id;
   /* ================= FETCH EXAMS ================= */
   useEffect(() => {
     fetchExams();

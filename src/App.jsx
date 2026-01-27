@@ -17,6 +17,7 @@ import ParentFeedBack from "./pages/TeacherFB";
 
 
 
+
 function App() {
   const navigate = useNavigate();
 
@@ -36,6 +37,7 @@ function App() {
 
   return (
     <div>
+      {/* <marquee direction="left" scrollamount="4">Hello</marquee> */}
       <Navbar />
 
       <Routes>
@@ -50,6 +52,7 @@ function App() {
         <Route path="/books" element={<Books />} />
         <Route path="/stu-fb" element={<StudentFeedBack />} />
         <Route path="/parent-fb" element={<ParentFeedBack />} />
+        
 
         {/* 🔒 Protected Routes */}
         <Route element={<ProtectedRoute />}>

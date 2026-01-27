@@ -85,7 +85,7 @@ export default function DummyDataParentTest(){
           S
         </div>
         <div>
-          <h4 className="font-semibold text-gray-800">Suresh Kumar</h4>
+          <h4 className="font-semibold text-gray-800">Govind</h4>
           <p className="text-xs text-gray-500">Parent</p>
         </div>
       </div>
@@ -129,7 +129,7 @@ export default function DummyDataParentTest(){
           S
         </div>
         <div>
-          <h4 className="font-semibold text-gray-800">Suresh Kumar</h4>
+          <h4 className="font-semibold text-gray-800">Kiran</h4>
           <p className="text-xs text-gray-500">Parent</p>
         </div>
       </div>
