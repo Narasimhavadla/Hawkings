@@ -14,7 +14,7 @@ function Aboutus() {
     <div className="bg-gray-50">
 
             {/* Test Payment Section */}
-        <section className="bg-white py-12">
+        {/* <section className="bg-white py-12">
           <div className="max-w-4xl mx-auto text-center px-6">
             <h2 className="text-2xl md:text-3xl font-bold mb-4">
               Try Our Payment Gateway
@@ -25,7 +25,7 @@ function Aboutus() {
 
             <RazorpayPayment />
           </div>
-        </section>
+        </section> */}
 
 
       {/* Hero Section */}

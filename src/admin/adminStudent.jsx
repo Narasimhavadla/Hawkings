@@ -162,6 +162,7 @@ function AdminStudent() {
             <option value="all">All Status</option>
             <option value="pending">Pending</option>
             <option value="completed">Completed</option>
+            <option value="paid">Paid</option>
           </select>
 
           <button
@@ -218,8 +219,9 @@ function AdminStudent() {
                     icon={faCircle}
                     className={
                       s.Status === "pending"
-                        ? "text-orange-500"
-                        : "text-green-500"
+                        ? "text-orange-500" :
+                      s.Status === "paid" ?
+                         "text-green-500" : "text-red-500"
                     }
                   />
                 </td>

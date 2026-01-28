@@ -1,37 +1,57 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileInvoice, faDownload } from "@fortawesome/free-solid-svg-icons";
 
+const API_BASE = "http://localhost:3000/api/v1";
+
 export default function TeacherPayments() {
-  const [payments] = useState([
-    {
-      id: 1,
-      examName: "Hawking Maths Olympiad – Level 1",
-      studentsCount: 120,
-      amount: 6000,
-      paymentDate: "2025-01-12",
-      invoiceNo: "INV-HMO-001",
-    },
-    {
-      id: 2,
-      examName: "Hawking Maths Olympiad – Level 2",
-      studentsCount: 80,
-      amount: 4800,
-      paymentDate: "2025-02-03",
-      invoiceNo: "INV-HMO-002",
-    },
-    {
-      id: 3,
-      examName: "Hawking Junior Maths Challenge",
-      studentsCount: 45,
-      amount: 2250,
-      paymentDate: "2025-03-01",
-      invoiceNo: "INV-HMO-003",
-    },
-  ]);
+  const [payments, setPayments] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // 👉 Replace this with real teacherId from auth
+  // const teacherId = localStorage.getItem("teacherId"); 
+
+   const authUser = JSON.parse(localStorage.getItem("authUser"));
+  const teacherId = authUser?.id;
+
+  useEffect(() => {
+    fetchPayments();
+  }, []);
+
+  const fetchPayments = async () => {
+    try {
+      const res = await axios.get(
+        `${API_BASE}/teacher-payments/${teacherId}`
+      );
+      setPayments(res.data.data || []);
+    } catch (err) {
+      console.error("Failed to load payments", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const downloadInvoice = (invoiceNo) => {
+    window.open(
+      `${API_BASE}/invoices/${invoiceNo}`,
+      "_blank"
+    );
+  };
 
   const totalAmount = payments.reduce((sum, p) => sum + p.amount, 0);
-  const totalStudents = payments.reduce((sum, p) => sum + p.studentsCount, 0);
+  const totalStudents = payments.reduce(
+    (sum, p) => sum + (p.studentsCount || 0),
+    0
+  );
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Loading payments...
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 p-4 md:p-8">
@@ -46,25 +66,21 @@ export default function TeacherPayments() {
 
         {/* Summary Cards */}
         <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
-          <SummaryCard
-            title="Total Amount"
-            value={`₹ ${totalAmount}`}
-          />
-          <SummaryCard
-            title="Total Students"
-            value={totalStudents}
-          />
-          <SummaryCard
-            title="Exams Paid"
-            value={payments.length}
-          />
+          <SummaryCard title="Total Amount" value={`₹ ${totalAmount}`} />
+          <SummaryCard title="Total Students" value={totalStudents} />
+          <SummaryCard title="Exams Paid" value={payments.length} />
         </div>
 
         {/* Payments Table */}
         <div className="overflow-hidden rounded-2xl bg-white shadow">
-          <div className="border-b px-6 py-4 flex items-center gap-2">
-            <FontAwesomeIcon icon={faFileInvoice} className="text-indigo-600" />
-            <h2 className="text-lg font-semibold">Payment History</h2>
+          <div className="flex items-center gap-2 border-b px-6 py-4">
+            <FontAwesomeIcon
+              icon={faFileInvoice}
+              className="text-indigo-600"
+            />
+            <h2 className="text-lg font-semibold">
+              Payment History
+            </h2>
           </div>
 
           <div className="overflow-x-auto">
@@ -73,9 +89,6 @@ export default function TeacherPayments() {
                 <tr>
                   <th className="px-4 py-3 text-left font-semibold text-gray-600">
                     Exam Name
-                  </th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-600">
-                    Students
                   </th>
                   <th className="px-4 py-3 text-left font-semibold text-gray-600">
                     Amount
@@ -90,24 +103,38 @@ export default function TeacherPayments() {
               </thead>
 
               <tbody>
+                {payments.length === 0 && (
+                  <tr>
+                    <td
+                      colSpan="4"
+                      className="px-4 py-6 text-center text-gray-500"
+                    >
+                      No payments found
+                    </td>
+                  </tr>
+                )}
+
                 {payments.map((payment, index) => (
                   <tr
                     key={payment.id}
-                    className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
+                    className={
+                      index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                    }
                   >
-                    <td className="px-4 py-3">{payment.examName}</td>
-                    <td className="px-4 py-3">{payment.studentsCount}</td>
+                    <td className="px-4 py-3">
+                      Teacher Registration Fee
+                    </td>
                     <td className="px-4 py-3 font-medium">
                       ₹ {payment.amount}
                     </td>
                     <td className="px-4 py-3">
-                      {new Date(payment.paymentDate).toLocaleDateString()}
+                      {new Date(payment.createdAt).toLocaleDateString()}
                     </td>
                     <td className="px-4 py-3 text-center">
                       <button
                         className="inline-flex items-center gap-2 rounded-lg border px-3 py-1 text-indigo-600 hover:bg-indigo-50"
                         onClick={() =>
-                          alert(`Downloading ${payment.invoiceNo}`)
+                          downloadInvoice(payment.invoiceNo)
                         }
                       >
                         <FontAwesomeIcon icon={faDownload} />

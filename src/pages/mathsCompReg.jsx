@@ -5,8 +5,6 @@ import StudentForm from "../forms/StudentForm";
 import TeacherRegistration from "../forms/TeacherRegistration";
 import LoadingModal from "../utils/LoadingModal";
 
-// Heroicons for success card
-// import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCircle
@@ -17,23 +15,19 @@ function MathsCompReg() {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   
-  // Step states for student registration
   const [step, setStep] = useState(1); // 1 = form, 2 = payment, 3 = success
   const [studentPayload, setStudentPayload] = useState(null);
 
-  /* ---------------- STUDENT FORM SUBMIT ---------------- */
   const handleSubmitStudent = async (studentData) => {
-    // Store student data and go to payment step
     setStudentPayload({
       ...studentData,
       Status: "pending",
       examId: 0,
       teacherId: 0,
     });
-    setStep(2); // move to payment
+    setStep(2); 
   };
 
-  /* ---------------- TEACHER SUBMIT (unchanged) ---------------- */
   const handleSubmitTeacher = async (teacherData) => {
     try {
       setLoading(true);
@@ -124,14 +118,13 @@ function MathsCompReg() {
       try {
         setLoading(true);
 
-        // 1 ₹ test payment
         const { data: order } = await axios.post(
           "http://localhost:3000/api/v1/create-order",
           { amount: 1 }
         );
 
         const options = {
-          key: "rzp_test_S8sJNP1bvQjOn8", // match your backend key
+          key: "rzp_test_S8sJNP1bvQjOn8", 
           amount: order.amount,
           currency: "INR",
           name: "Hawkings Maths Olympiad",
@@ -207,7 +200,7 @@ function MathsCompReg() {
   /* ---------------- STEP 3 SUCCESS ---------------- */
   function SuccessCard({ studentName, amountPaid = 1 }) {
     return (
-      <div className="max-w-md mx-auto bg-white rounded-3xl shadow-2xl p-8 text-center mt-10">
+      <div className="max-w-md mx-auto bg-white rounded-3xl shadow-2xl p-8 text-center mt-8">
         <div className="flex justify-center mb-6">
           {/* <CheckCircleIcon className="w-20 h-20 text-green-500" /> */}
           <FontAwesomeIcon  icon={faCircle}/>
@@ -278,8 +271,8 @@ function MathsCompReg() {
         </div>
 
         {/* Toggle */}
-        <div className="max-w-md mx-auto mb-6">
-          <div className="flex bg-white rounded-xl shadow-md p-1">
+        <div className="max-w-md mx-auto mb-4">
+          <div className="flex bg-white rounded-xl shadow-md ">
             <ToggleButton
               active={activeForm === "student"}
               onClick={() => setActiveForm("student")}
@@ -341,7 +334,7 @@ function ToggleButton({ active, label, onClick }) {
   return (
     <button
       onClick={onClick}
-      className={`w-1/2 py-3 text-sm md:text-base font-semibold rounded-lg transition-all
+      className={`w-1/2 py-2 text-sm md:text-base font-semibold rounded-lg transition-all
         ${
           active
             ? "bg-indigo-600 text-white shadow"

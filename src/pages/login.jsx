@@ -48,7 +48,10 @@ export default function Login() {
           id: user.id,
           username: user.username,
           role: user.role,
+          teacherId: user.teacherId || null,   
           loginTime,
+            
+        
         })
       );
 
