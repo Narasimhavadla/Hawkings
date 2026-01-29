@@ -44,6 +44,7 @@ function MathsCompReg() {
         teachingFrom: teacherData.teachingFrom,
         teachingTo: teacherData.teachingTo,
         role: "teacher",
+        refferCode :teacherData.refferCode
       };
 
       await axios.post(

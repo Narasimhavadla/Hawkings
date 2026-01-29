@@ -9,7 +9,8 @@ import {
   faUserGroup,
   faChalkboard,
   faIndianRupee,
-  faPlus
+  faPlus,
+  faAd
 } from "@fortawesome/free-solid-svg-icons";
 
 const Sidebar = ({ activeTab, setActiveTab }) => {
@@ -26,6 +27,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
     { id: "parent", label: "Parent Testimonials", icon: faComments },
     { id: "student", label: "Student Testimonials", icon: faCommentDots },
     { id: "payment", label: "Payments", icon: faIndianRupee },
+    { id: "advertisement", label: "AD's", icon: faAd },
     
 
     // ✅ Show only for SUPER ADMIN
@@ -43,12 +45,12 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
         Hawking <span>{role == "superadmin" ? <span className="text-red-600">Super Admin</span> : <span className="text-green-500">Admin</span>}</span>
       </div>
 
-      <ul className="mt-2 space-y-1">
+      <ul className="mt-3 space-y-1">
         {menu.map((item) => (
           <li
             key={item.id}
             onClick={() => setActiveTab(item.id)}
-            className={`flex items-center gap-3 px-6 py-2 cursor-pointer 
+            className={`flex items-center gap-3 px-6 py-1 cursor-pointer 
               transition-all hover:bg-slate-800
               ${
                 activeTab === item.id

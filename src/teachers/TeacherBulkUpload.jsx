@@ -22,7 +22,7 @@ export default function TeacherBulkUpload() {
   const [examError, setExamError] = useState(null);
 
   const authUser = JSON.parse(localStorage.getItem("authUser"));
-  const teacherId = authUser?.id;
+  const teacherId = authUser?.teacherId;
 
   /* ================= FETCH EXAMS ================= */
   useEffect(() => {
@@ -249,6 +249,7 @@ export default function TeacherBulkUpload() {
               amount,
               examName: selectedExam.name,
               onSuccess: registerBulkStudents,
+              teacherId : teacherId
             });
           }}
         />

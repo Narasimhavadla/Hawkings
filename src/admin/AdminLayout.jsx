@@ -13,6 +13,7 @@ import UserActivities from "../superAdmin/userActivity";
 import AdminTeacherRegistration from "./adminTeachers";
 import Reffarals from "../superAdmin/Refferals";
 import Payment from "./Payment";
+import AdvertisementPage from "./AvertisementPage";
 
 const AdminLayout = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -56,6 +57,8 @@ const AdminLayout = () => {
         return <AdminStuTest />;
       case "payment":
         return <Payment />;
+      case "advertisement":
+        return <AdvertisementPage />;
         
 
       // 🛡 Super Admin protection

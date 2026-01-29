@@ -13,7 +13,7 @@ export default function TeacherPayments() {
   // const teacherId = localStorage.getItem("teacherId"); 
 
    const authUser = JSON.parse(localStorage.getItem("authUser"));
-  const teacherId = authUser?.id;
+  const teacherId = authUser?.teacherId;
 
   useEffect(() => {
     fetchPayments();
@@ -67,7 +67,7 @@ export default function TeacherPayments() {
         {/* Summary Cards */}
         <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
           <SummaryCard title="Total Amount" value={`₹ ${totalAmount}`} />
-          <SummaryCard title="Total Students" value={totalStudents} />
+          {/* <SummaryCard title="Total Students" value={totalStudents} /> */}
           <SummaryCard title="Exams Paid" value={payments.length} />
         </div>
 

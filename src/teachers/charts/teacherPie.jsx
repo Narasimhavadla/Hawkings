@@ -12,7 +12,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function TeacherPieChart() {
   const authUser = JSON.parse(localStorage.getItem("authUser"));
-  const teacherId = authUser?.id;
+  const teacherId = authUser?.teacherId;
 
   const [chartData, setChartData] = useState(null);
   const [loading, setLoading] = useState(true);

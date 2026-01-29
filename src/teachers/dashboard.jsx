@@ -12,7 +12,7 @@ export default function TeacherDashboard() {
   const [error, setError] = useState("");
   
     const authUser = JSON.parse(localStorage.getItem("authUser"));
-  const teacherId = authUser?.id;
+  const teacherId = authUser?.teacherId;
 
 
   useEffect(() => {
@@ -76,20 +76,14 @@ export default function TeacherDashboard() {
           <p className="text-sm text-gray-500">Exams Conducted</p>
           <p className="text-2xl font-semibold">{dashboardData.examsWithStudents}</p>
         </div>
-        <div className="rounded-2xl bg-white p-4 shadow">
+        {/* <div className="rounded-2xl bg-white p-4 shadow">
           <p className="text-sm text-gray-500">Average Score</p>
           <p className="text-2xl font-semibold">XX %</p>
-        </div>
+        </div> */}
       </div>
 
       {/* Charts Section */}
       <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
-        <div className="rounded-2xl bg-white p-6 shadow">
-          <h2 className="mb-4 font-semibold">Class-wise Performance</h2>
-          <div className="flex h-48 items-center justify-center rounded-xl bg-gray-50 text-gray-400">
-            Bar Chart Placeholder
-          </div>
-        </div>
         <div className="rounded-2xl bg-white p-6 shadow">
           <h2 className="mb-4 font-semibold">Class wise students</h2>
           <div className="flex h-48 items-center justify-center rounded-xl bg-gray-50 text-gray-400">
@@ -98,10 +92,19 @@ export default function TeacherDashboard() {
 
           </div>
         </div>
+
+        <div className="rounded-2xl bg-white p-6 shadow">
+          {/* <h2 className="mb-4 font-semibold">Class-wise Performance</h2>
+          <div className="flex h-48 items-center justify-center rounded-xl bg-gray-50 text-gray-400">
+            Add run
+          </div> */}
+          <h1>Advertisement</h1>
+        </div>
+        
       </div>
 
       {/* Table Section */}
-      <div className="mt-6 rounded-2xl bg-white p-6 shadow">
+      {/* <div className="mt-6 rounded-2xl bg-white p-6 shadow">
         <h2 className="mb-4 font-semibold">Recent Student Attempts</h2>
         <table className="w-full text-left text-sm">
           <thead>
@@ -133,7 +136,7 @@ export default function TeacherDashboard() {
             </tr>
           </tbody>
         </table>
-      </div>
+      </div> */}
     </div>
   );
 }

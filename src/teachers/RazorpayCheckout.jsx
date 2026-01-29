@@ -38,6 +38,7 @@ export default async function RazorpayCheckout({
       name: "Hawking Maths Olympiad",
       description: examName,
       order_id: orderData.order.id,
+      teacherId : teacherId, //// new line i just added
       handler: async function (response) {
         try {
           const verifyRes = await fetch("http://localhost:3000/api/v1/verify-payment", {

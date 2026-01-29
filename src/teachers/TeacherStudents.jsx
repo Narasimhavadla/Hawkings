@@ -30,7 +30,7 @@ export default function TeacherStudents() {
 
   // const teacherId = JSON.parse(localStorage.getItem("authUser"))?.id;
     const authUser = JSON.parse(localStorage.getItem("authUser"));
-  const teacherId = authUser?.id;
+  const teacherId = authUser?.teacherId;
 
   /* ================= FETCH EXAMS ================= */
   useEffect(() => {
