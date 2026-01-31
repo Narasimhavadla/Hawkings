@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 
 function AddExamScheduleModal({ onClose, onSuccess }) {
   const [formData, setFormData] = useState({
-    name: "",
+    examName: "",
     year: "",
     status: "active",
     lastRegistrationDate: "",
@@ -28,15 +28,27 @@ function AddExamScheduleModal({ onClose, onSuccess }) {
 
   const handleSave = async () => {
     const {
-      name,
-      year,
-      status,
-      lastRegistrationDate,
-      amount,
+      // examName,
+      // year,
+      // status,
+      // lastRegistrationDate,
+      // onlineExamDate,
+      // amount,
+    examName,
+    year,
+    status,
+    lastRegistrationDate,
+    onlineExamDate,
+    onlineExamResultDate,
+    onlineLiveInterviewDate,
+    finalResultDate,
+    amount,
+    examFormat
+      
     } = formData;
 
     // 🔴 Required field validation
-    if (!name || !year || !status || !lastRegistrationDate || !amount) {
+    if (!examName || !year || !status || !lastRegistrationDate || !amount) {
       setError("Please fill all required fields");
       return;
     }
@@ -95,7 +107,7 @@ function AddExamScheduleModal({ onClose, onSuccess }) {
 
         {/* Form */}
         <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          <Input label="Exam Name *" name="name" value={formData.name} onChange={handleChange} />
+          <Input label="Exam Name *" name="examName" value={formData.examName} onChange={handleChange} />
           <Input label="Year *" type="number" name="year" value={formData.year} onChange={handleChange} />
           <Input label="Registration Last Date *" type="date" name="lastRegistrationDate" value={formData.lastRegistrationDate} onChange={handleChange} />
           <Input label="Online Exam Date" type="date" name="onlineExamDate" value={formData.onlineExamDate} onChange={handleChange} />

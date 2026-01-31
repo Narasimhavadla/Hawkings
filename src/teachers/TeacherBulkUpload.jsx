@@ -166,7 +166,7 @@ export default function TeacherBulkUpload() {
                     <FontAwesomeIcon icon={faCheck} /> Selected
                   </span>
                 )}
-                <h3 className="font-bold text-lg">{exam.name}</h3>
+                <h3 className="font-bold text-lg">{exam.examName}</h3>
                 <p className="text-indigo-600 mt-2">Fee: ₹{exam.amount}</p>
               </div>
             );

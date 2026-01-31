@@ -52,6 +52,7 @@ export default async function RazorpayCheckout({
               teacherId,
               examId,
               discountApplied,
+              examName
             }),
           });
 

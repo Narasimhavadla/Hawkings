@@ -148,7 +148,7 @@ export default function TeacherStudents() {
       {selectedExam && (
         <>
           <div className="bg-indigo-600 text-white rounded-xl p-4 mb-6">
-            <h3 className="font-semibold">{selectedExam.name}</h3>
+            <h3 className="font-semibold">{selectedExam.examName}</h3>
             <p>
               Students: {students.length} | Total: ₹{totalAmount}
             </p>
@@ -190,11 +190,12 @@ export default function TeacherStudents() {
           onProceed={({ amount, discountApplied }) =>
             RazorpayCheckout({
               amount,
-              examName: selectedExam.name,
+              examName: selectedExam.examName,
               teacherId,
               examId: selectedExam.id,
               discountApplied,
               onSuccess: registerStudents,
+              
             })
           }
         />

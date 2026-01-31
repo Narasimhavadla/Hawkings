@@ -122,7 +122,8 @@ export default function TeacherPayments() {
                     }
                   >
                     <td className="px-4 py-3">
-                      Teacher Registration Fee
+                      {/* Teacher Registration Fee */}
+                      {payment.examName}
                     </td>
                     <td className="px-4 py-3 font-medium">
                       ₹ {payment.amount}

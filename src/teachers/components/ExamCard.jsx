@@ -16,7 +16,7 @@ export default function ExamCard({ exam, selected, onSelect }) {
         </span>
       )}
 
-      <h3 className="text-lg font-bold">{exam.name}</h3>
+      <h3 className="text-lg font-bold">{exam.examName}</h3>
       <p className="text-sm text-indigo-600 mt-2">Fee: ₹{exam.amount}</p>
     </div>
   );

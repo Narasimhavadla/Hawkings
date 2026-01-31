@@ -142,7 +142,7 @@ function AdminExamSched() {
                     </div>
                   </td>
 
-                  <td className="p-3 font-medium">{exam.name}</td>
+                  <td className="p-3 font-medium">{exam.examName}</td>
                   <td className="p-3 text-center">{exam.year}</td>
                   <td className="p-3">{formatDate(exam.lastRegistrationDate)}</td>
                   <td className="p-3">{formatDate(exam.onlineExamDate)}</td>

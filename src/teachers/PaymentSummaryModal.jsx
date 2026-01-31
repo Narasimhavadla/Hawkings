@@ -30,7 +30,7 @@ export default function PaymentSummaryModal({
         </div>
 
         <div className="px-6 py-5 space-y-4">
-          <InfoRow label="Exam" value={exam.name} />
+          <InfoRow label="Exam" value={exam.examName} />
           <InfoRow label="Students" value={studentCount} />
           <InfoRow label="Fee / Student" value={`₹${exam.amount}`} />
           <InfoRow label="Subtotal" value={`₹${baseAmount}`} />
