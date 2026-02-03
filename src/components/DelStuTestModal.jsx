@@ -2,7 +2,12 @@ import axios from "axios";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-const DELETE_URL = "http://localhost:3000/api/v1/student-testinomials";
+
+const api =import.meta.env.VITE_API_BASE_URL
+
+const DELETE_URL = `${api}/student-testinomials`
+
+const token = localStorage.getItem("token")
 
 function DeleteConfirmModal({ isOpen, testimonialId, onClose, onSuccess }) {
   const [loading, setLoading] = useState(false);
@@ -20,7 +25,11 @@ function DeleteConfirmModal({ isOpen, testimonialId, onClose, onSuccess }) {
 
       console.log("Deleting ID:", testimonialId); // 🔍 DEBUG
 
-      await axios.delete(`${DELETE_URL}/${testimonialId}`);
+      await axios.delete(`${DELETE_URL}/${testimonialId}`,{
+        headers : {
+          Authorization : `Bearer ${token}`
+        }
+      });
 
       toast.success("Deleted successfully");
       onClose();

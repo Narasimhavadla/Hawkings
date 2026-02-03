@@ -18,6 +18,11 @@ function AddExamScheduleModal({ onClose, onSuccess }) {
     examFormat: "online",
   });
 
+const api =import.meta.env.VITE_API_BASE_URL
+
+const token = localStorage.getItem("token")
+
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -57,8 +62,12 @@ function AddExamScheduleModal({ onClose, onSuccess }) {
       setLoading(true);
 
       const res = await axios.post(
-        "http://localhost:3000/api/v1/exam-schedule",
-        formData
+        `${api}/exam-schedule`,
+        formData,{
+          headers : {
+            Authorization :`Bearer ${token}`
+          }
+        }
       );
 
       if (res.data.status) {

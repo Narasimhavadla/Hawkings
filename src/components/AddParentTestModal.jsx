@@ -9,7 +9,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 
-const API_URL = "http://localhost:3000/api/v1/parent-testinomials"; 
+
+const api =import.meta.env.VITE_API_BASE_URL
+const token = localStorage.getItem("token")
+
+const API_URL = `${api}/parent-testinomials`; 
 // 🔼 change if needed
 
 function AddParentTestimonialModal({ onClose,refresh }) {
@@ -37,6 +41,10 @@ function AddParentTestimonialModal({ onClose,refresh }) {
         name: formData.name,
         content: formData.content,
         rating: formData.rating,
+      },{
+        headers : {
+          Authorization : `Bearer ${token}`
+        }
       });
       refresh()
       onClose(); // close modal on success

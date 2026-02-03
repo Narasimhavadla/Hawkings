@@ -12,7 +12,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 
-const API_URL = "http://localhost:3000/api/v1/student";
+
+const api =import.meta.env.VITE_API_BASE_URL
+
+const API_URL = `${api}/student`
+
+const token = localStorage.getItem("token")
 
 export default function EditStudentModal({ onClose, student, refresh }) {
   const [loading, setLoading] = useState(false);
@@ -64,7 +69,11 @@ export default function EditStudentModal({ onClose, student, refresh }) {
 
       const { id, ...payload } = form;
 
-      await axios.put(`${API_URL}/${id}`, payload);
+      await axios.put(`${API_URL}/${id}`, payload,{
+        headers:{
+          Authorization : `Bearer ${token}`
+        }
+      });
 
       toast.success("Student Updated Successfully 🎉");
       refresh();

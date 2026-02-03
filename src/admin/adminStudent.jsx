@@ -33,6 +33,10 @@ function AdminStudent() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
 
+const api =import.meta.env.VITE_API_BASE_URL
+const token = localStorage.getItem("token")
+
+
   /* ------------------ FETCH STUDENTS ------------------ */
   useEffect(() => {
     fetchStudents();
@@ -42,7 +46,13 @@ function AdminStudent() {
     try {
       setLoading(true);
       setError(null);
-      const res = await axios.get("http://localhost:3000/api/v1/student");
+      const res = await axios.get(`${api}/student`,
+        {
+          headers : {
+            Authorization :`Bearer ${token}`
+          }
+        }
+      );
       // Sort by ID descending (newest first)
       const sortedStudents = res.data.data.sort((a, b) => b.id - a.id);
       setStudents(sortedStudents);

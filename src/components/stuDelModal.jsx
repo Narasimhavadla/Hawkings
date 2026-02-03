@@ -6,12 +6,23 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import{toast} from 'react-toastify'
 
-const API_URL = "http://localhost:3000/api/v1/student";
+
+const api =import.meta.env.VITE_API_BASE_URL
+
+const token = localStorage.getItem("token")
+
+const API_URL = `${api}/student`
 
 function StuDeleteModal({ onClose, studentId, refresh }) {
   const handleDelete = async () => {
     try {
-      await axios.delete(`${API_URL}/${studentId}`);
+      await axios.delete(`${API_URL}/${studentId}`,
+        {
+          headers : {
+            Authorization : `Bearer ${token}`
+          }
+        }
+      );
       refresh();
       onClose();
       toast.success("Deleted Succesfully")

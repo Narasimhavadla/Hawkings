@@ -7,7 +7,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 
-const API_URL = "http://localhost:3000/api/v1/parent-testinomials";
+const api =import.meta.env.VITE_API_BASE_URL
+
+const token = localStorage.getItem("token")
+
 
 function DeleteParentTestimonialModal({
   selectTestId,
@@ -22,7 +25,11 @@ function DeleteParentTestimonialModal({
     try {
       setLoading(true);
 
-      await axios.delete(`${API_URL}/${selectTestId}`);
+      await axios.delete(`${api}/${selectTestId}`,{
+        headers : {
+          Authorization : `Bearer ${token}`
+        }
+      });
       toast.success("Deleted Succesfully")
       
       refresh();   

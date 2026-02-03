@@ -119,10 +119,15 @@ function MathsCompReg() {
       try {
         setLoading(true);
 
-        const { data: order } = await axios.post(
-          "http://localhost:3000/api/v1/create-order",
-          { amount: 1 }
-        );
+          const res = await fetch("http://localhost:3000/api/v1/student/create-order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ amount : 1 }),
+        });
+
+        const order = await res.json();
+        if (!order.success) return alert("Order creation failed");
+            
 
         const options = {
           key: "rzp_test_S8sJNP1bvQjOn8", 
@@ -133,22 +138,35 @@ function MathsCompReg() {
           order_id: order.id,
           handler: async function (response) {
             // Verify payment in backend
-            const verifyRes = await axios.post(
-              "http://localhost:3000/api/v1/verify-payment",
-              {
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-                amount: 1,
-              }
-            );
+            // const verifyRes = await axios.post(
+            //   "http://localhost:3000/api/v1/student/verify-payment",
+            //   {
+            //     razorpay_order_id: response.razorpay_order_id,
+            //     razorpay_payment_id: response.razorpay_payment_id,
+            //     razorpay_signature: response.razorpay_signature,
+            //     amount: 1,
+            //     studentData: studentPayload,
+            //   }
+            // );
+
+              const verifyRes = await fetch("http://localhost:3000/api/v1/student/verify-payment", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              amount :1,
+              studentData: studentPayload,
+            }),
+          });
 
             if (verifyRes.data.success) {
               // Save student to DB after payment
-              await axios.post(
-                "http://localhost:3000/api/v1/student",
-                studentPayload
-              );
+              // await axios.post(
+              //   "http://localhost:3000/api/v1/student",
+              //   studentPayload
+              // );
 
               onSuccess();
             } else {
@@ -210,7 +228,7 @@ function MathsCompReg() {
         <h2 className="text-3xl font-extrabold text-green-600 mb-4">
           Registration Successful!
         </h2>
-
+ 
         <p className="text-gray-600 text-lg mb-6">
           {studentName
             ? `${studentName} has been successfully registered.`
@@ -296,13 +314,15 @@ function MathsCompReg() {
               {step === 1 && (
                 <StudentForm
                   onSubmit={handleSubmitStudent}
-                  loading={loading}
+                  loading={loading} 
                 />
               )}
 
               {step === 2 && (
                 <StudentPayment
                   onSuccess={() => setStep(3)}
+                  studentData = {studentPayload}
+
                 />
               )}
 

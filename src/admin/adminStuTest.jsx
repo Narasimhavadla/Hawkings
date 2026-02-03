@@ -16,7 +16,10 @@ import AddStudentTestimonialModal from "../components/AddStuTestModal";
 import EditStudentTestimonialModal from "../components/EditStuTestModal";
 import DeleteConfirmModal from "../components/DelStuTestModal";
 
-const API_URL = "http://localhost:3000/api/v1/student-testinomials"; 
+const api =import.meta.env.VITE_API_BASE_URL
+
+const API_URL = `${api}/student-testinomials`; 
+const token = localStorage.getItem("token")
 
 function AdminStuTest() {
   const [data, setData] = useState([]);
@@ -53,7 +56,11 @@ function AdminStuTest() {
 
   const togglePublish = async (id) => {
     try {
-      await axios.patch(`${API_URL}/${id}/toggle`);
+      await axios.patch(`${API_URL}/${id}/toggle`,{},{
+        headers:{
+          Authorization : `Bearer ${token}`
+        }
+      });
       toast.success("Status updated");
       fetchTestimonials();
     } catch (err) {

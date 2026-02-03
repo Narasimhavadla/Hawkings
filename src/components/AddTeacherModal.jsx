@@ -28,6 +28,10 @@ export default function AddTeacherModal({ onClose, onSuccess }) {
 
   const [loading, setLoading] = useState(false);
 
+const api =import.meta.env.VITE_API_BASE_URL
+const token = localStorage.getItem("token")
+
+
   /* 🔹 Handle input change with range validation */
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -72,7 +76,11 @@ export default function AddTeacherModal({ onClose, onSuccess }) {
     try {
       setLoading(true);
 
-      await axios.post("http://localhost:3000/api/v1/teachers", form);
+      await axios.post(`${api}/teachers`, form,{
+        headers : {
+          Authorization :`Bearer ${token}`
+        }
+      });
 
       toast.success("Teacher created successfully");
 

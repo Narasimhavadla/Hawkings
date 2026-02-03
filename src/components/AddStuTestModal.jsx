@@ -4,7 +4,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faStar } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 
-const API_URL = "http://localhost:3000/api/v1/student-testinomials"; 
+
+const api =import.meta.env.VITE_API_BASE_URL
+
+const API_URL = `${api}/student-testinomials`
+
+const token = localStorage.getItem("token")
 // 🔁 change if needed
 
 function AddStudentTestimonialModal({ isOpen, onClose, onSubmit,onSuccess }) {
@@ -28,7 +33,11 @@ function AddStudentTestimonialModal({ isOpen, onClose, onSubmit,onSuccess }) {
     try {
       setLoading(true);
 
-      const res = await axios.post(API_URL, form);
+      const res = await axios.post(API_URL, form,{
+        headers : {
+          Authorization : `Bearer ${token}`
+        }
+      });
 
       toast.success("Student testimonial added successfully");
 

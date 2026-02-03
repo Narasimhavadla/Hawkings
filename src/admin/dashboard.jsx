@@ -7,8 +7,16 @@ export default function Dashboard() {
 const [totalStudents, setTotalStudents] = useState(0);
 const [totalTeachers,setTotalTeachers] = useState(0)
 
+const api =import.meta.env.VITE_API_BASE_URL
+
   useEffect(() => {
-    axios.get("http://localhost:3000/api/v1/dashboard-data")
+      const token = localStorage.getItem("token");
+    axios.get(`${api}/dashboard-data`,{
+      headers: {
+      Authorization: `Bearer ${token}`,
+    } }
+    )
+    
       .then((res) => {
         // setPieData(res.data.data);
         setTotalStudents(res.data.meta.totalStudents);

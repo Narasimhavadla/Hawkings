@@ -18,6 +18,11 @@ function AdminExamSched() {
   const [showAddExamModal, setShowAddExamModal] = useState(false);
   const [showDelModal, setShowDeleteModal] = useState(false)
 
+
+  const api =import.meta.env.VITE_API_BASE_URL
+  const token = localStorage.getItem("token")
+
+
   /* 🔹 Fetch Exam Schedules */
   const fetchExamSchedules = async () => {
     try {
@@ -25,7 +30,11 @@ function AdminExamSched() {
       setError("");
 
       const res = await axios.get(
-        "http://localhost:3000/api/v1/exam-schedule"
+        `${api}/exam-schedule`,{
+          headers : {
+            Authorization : `Bearer ${token}`
+          }
+        }
       );
 
       if (res.data.status) {

@@ -18,6 +18,10 @@ function EditExamScheduleModal({ onClose, examId, onSuccess }) {
     examFormat: "online",
   });
 
+const api =import.meta.env.VITE_API_BASE_URL
+const token = localStorage.getItem("token")
+
+
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -38,7 +42,11 @@ function EditExamScheduleModal({ onClose, examId, onSuccess }) {
       setError("");
 
       const res = await axios.get(
-        `http://localhost:3000/api/v1/exam-schedule/${examId}`
+        `${api}/exam-schedule/${examId}`,{
+          headers : {
+            Authorization : `Bearer ${token}`
+          }
+        }
       );
 
       if (res.data.status) {
@@ -87,7 +95,7 @@ function EditExamScheduleModal({ onClose, examId, onSuccess }) {
       setError("");
 
       const res = await axios.put(
-        `http://localhost:3000/api/v1/exam-schedule/${examId}`,
+        `${api}/exam-schedule/${examId}`,
         formData
       );
 

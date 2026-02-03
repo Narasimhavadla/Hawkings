@@ -20,11 +20,19 @@ export default function AdminTeacherRegistration() {
 
   const [selectedTeacher, setSelectedTeacher] = useState(null);
 
+const api =import.meta.env.VITE_API_BASE_URL
+
+const token = localStorage.getItem("token")
+
   /* 🔹 Fetch teachers */
   const fetchTeachers = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:3000/api/v1/teachers");
+      const res = await axios.get(`${api}/teachers`,{
+        headers : {
+          Authorization : `Bearer ${token}`
+        }
+      });
       setTeachers(res.data?.data || []);
     } catch (err) {
       console.error("Fetch failed", err);

@@ -8,13 +8,22 @@ function DeleteExamScheduleModal({ examId, examName, onClose,refresh }) {
 //   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+const api =import.meta.env.VITE_API_BASE_URL
+
+const token = localStorage.getItem("token")
+
+
   const handleDelete = async () => {
     try {
     //   setLoading(true);
       setError("");
 
       const res = await axios.delete(
-        `http://localhost:3000/api/v1/exam-schedule/${examId}`
+        `${api}/exam-schedule/${examId}`,{
+          headers : {
+            Authorization : `Bearer ${token}`
+          }
+        }
       );
 
     

@@ -36,6 +36,12 @@ function AdminParentTest() {
   const [showAddTestModal, setShowAddTestModal] = useState(false);
   const [selectTestimonial,setSelectTestimonial] = useState(null)
   const [selectTestId,setSelectTestId] = useState(null)
+  
+
+
+const api =import.meta.env.VITE_API_BASE_URL
+const token = localStorage.getItem("token")
+
 
   /* ------------------ FETCH DATA ------------------ */
  const fetchTestimonials = async () => {
@@ -44,7 +50,12 @@ function AdminParentTest() {
     setError("");
 
     const res = await axios.get(
-      "http://localhost:3000/api/v1/parent-testinomials"
+      `${api}/parent-testinomials`,
+      {
+        headers : {
+          Authorization : `Bearer ${token}`
+        }
+      }
     );
 
     setTestimonials(res.data.data);
@@ -82,7 +93,11 @@ useEffect(() => {
   const togglePublish = async (id) => {
   try {
     await axios.patch(
-      `http://localhost:3000/api/v1/parent-testinomials/${id}/toggle`
+      `${api}/parent-testinomials/${id}/toggle`,{},{
+        headers : {
+          Authorization : `Bearer ${token}`
+        }
+      }
     );
 
     toast.success("Status updated");

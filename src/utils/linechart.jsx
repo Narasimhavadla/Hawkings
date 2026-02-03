@@ -21,8 +21,20 @@ ChartJS.register(
 export default function RegistrationLineChart() {
   const [chartData, setChartData] = useState(null);
 
+
+const api =import.meta.env.VITE_API_BASE_URL
+
+  
+
   useEffect(() => {
-    axios.get("http://localhost:3000/api/v1/student-line")
+
+    const token = localStorage.getItem("token")
+    axios.get(`${api}/student-line`,
+      {
+      headers: {
+      Authorization: `Bearer ${token}`,
+    } }
+    )
       .then((res) => {
         const labels = res.data.data.map(d => d.day);
         const values = res.data.data.map(d => d.students);

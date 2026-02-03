@@ -10,12 +10,21 @@ export default function DeleteTeacherModal({
 }) {
   const [loading, setLoading] = useState(false);
 
+const api =import.meta.env.VITE_API_BASE_URL
+
+const token = localStorage.getItem("token")
+
+
   const handleDelete = async () => {
     try {
       setLoading(true);
 
       await axios.delete(
-        `http://localhost:3000/api/v1/teachers/${teacherId}`
+        `${api}/teachers/${teacherId}`,{
+          headers : {
+            Authorization : `Bearer ${token}`
+          }
+        }
       );
 
       toast.success("Teacher deleted successfully");

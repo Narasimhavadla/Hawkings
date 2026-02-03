@@ -20,8 +20,16 @@ const gradients = [
 export default function StudentsPieChart() {
   const [data, setData] = useState([]);
 
+const api =import.meta.env.VITE_API_BASE_URL
+
+
   useEffect(() => {
-    axios.get("http://localhost:3000/api/v1/student-pie")
+    const token = localStorage.getItem("token")
+    axios.get(`${api}/student-pie`,{
+      headers : {
+        Authorization : `Bearer ${token}`
+      }
+    })
       .then((res) => setData(res.data.data))
       .catch(console.error);
   }, []);
