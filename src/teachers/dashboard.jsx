@@ -14,13 +14,21 @@ export default function TeacherDashboard() {
     const authUser = JSON.parse(localStorage.getItem("authUser"));
   const teacherId = authUser?.teacherId;
 
+  const api =import.meta.env.VITE_API_BASE_URL
+
+const token = localStorage.getItem("token")
+
 
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:3000/api/v1/teacher/${teacherId}/dashboard`
-        );
+          `${api}/teacher/${teacherId}/dashboard`,
+          {
+          headers : {
+            Authorization : `Bearer ${token}`
+          }
+        });
         if (res.data.status) {
           setDashboardData(res.data.data);
         } else {

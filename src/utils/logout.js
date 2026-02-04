@@ -1,28 +1,27 @@
-export const logoutUser = (navigate) => {
+import axios from "axios";
+
+
+
+export const logoutUser = async () => {
+  const api = import.meta.env.VITE_API_BASE_URL;
+
+  try {
   const authUser = JSON.parse(localStorage.getItem("authUser"));
-  const activities =
-    JSON.parse(localStorage.getItem("userActivities")) || [];
+  const activityId = authUser.activityId
 
-  if (authUser) {
-    // Update latest activity
-    for (let i = activities.length - 1; i >= 0; i--) {
-      if (
-        activities[i].username === authUser.username &&
-        activities[i].logoutTime === null
-      ) {
-        activities[i].logoutTime = new Date().toISOString();
-        break;
+    const token = localStorage.getItem("token");
+    if (!token || !activityId) return;
+
+    await axios.post(
+      `${api}/activity/logout`,
+      { activityId },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
-    }
-
-    localStorage.setItem(
-      "userActivities",
-      JSON.stringify(activities)
     );
+  } catch (err) {
+    console.error("Logout API failed", err);
   }
-
-  localStorage.removeItem("token");
-  localStorage.removeItem("authUser");
-
-  navigate("/", { replace: true });
 };

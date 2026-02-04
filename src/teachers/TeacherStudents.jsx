@@ -32,9 +32,19 @@ export default function TeacherStudents() {
     const authUser = JSON.parse(localStorage.getItem("authUser"));
   const teacherId = authUser?.teacherId;
 
+    const api =import.meta.env.VITE_API_BASE_URL
+
+const token = localStorage.getItem("token")
+
   /* ================= FETCH EXAMS ================= */
   useEffect(() => {
-    fetch("http://localhost:3000/api/v1/exam-schedule")
+    fetch(`${api}/exam-schedule`, {
+        method: "GET", // optional, GET is default
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((res) => res.json())
       .then((data) => {
         const active = data.data?.filter((e) => e.status === "active") || [];
@@ -104,7 +114,7 @@ export default function TeacherStudents() {
         })),
       };
 
-      const res = await fetch("http://localhost:3000/api/v1/student/bulk", {
+      const res = await fetch(`${api}/student/bulk`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

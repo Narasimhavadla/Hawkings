@@ -3,8 +3,7 @@ import * as XLSX from "xlsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFileExcel,
-  faFilter,
-  faCalendarDays
+  faCalendarDays,
 } from "@fortawesome/free-solid-svg-icons";
 
 const ITEMS_PER_PAGE = 10;
@@ -14,21 +13,41 @@ const UserActivities = () => {
   const [roleFilter, setRoleFilter] = useState("all");
   const [dateFilter, setDateFilter] = useState("");
   const [quickFilter, setQuickFilter] = useState("all");
+  const [activeOnly, setActiveOnly] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
   /* ----------------------------------
-     Load activity records
+     Load activity records (API)
   -----------------------------------*/
   useEffect(() => {
-    const stored =
-      JSON.parse(localStorage.getItem("userActivities")) || [];
+    const fetchActivities = async () => {
+      try {
+        const token = localStorage.getItem("token");
 
-    // ✅ Recent records on top
-    const sorted = stored.sort(
-      (a, b) => new Date(b.loginTime) - new Date(a.loginTime)
-    );
+        const res = await fetch(
+          "http://localhost:3000/api/v1/activity/user-activities",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-    setActivities(sorted);
+        const json = await res.json();
+
+        if (json.status) {
+          // Recent first
+          const sorted = json.data.sort(
+            (a, b) => new Date(b.loginTime) - new Date(a.loginTime)
+          );
+          setActivities(sorted);
+        }
+      } catch (err) {
+        console.error("Failed to fetch activities", err);
+      }
+    };
+
+    fetchActivities();
   }, []);
 
   /* ----------------------------------
@@ -45,10 +64,10 @@ const UserActivities = () => {
   };
 
   /* ----------------------------------
-     Date match helper
+     Date helper
   -----------------------------------*/
-  const isSameDay = (date1, date2) =>
-    date1.toDateString() === date2.toDateString();
+  const isSameDay = (d1, d2) =>
+    d1.toDateString() === d2.toDateString();
 
   /* ----------------------------------
      Filtered Data
@@ -61,9 +80,14 @@ const UserActivities = () => {
       data = data.filter((i) => i.role === roleFilter);
     }
 
-    // Quick filters
+    // ✅ Active filter
+    if (activeOnly) {
+      data = data.filter((i) => !i.logoutTime);
+    }
+
     const today = new Date();
 
+    // Quick filters
     if (quickFilter === "today") {
       data = data.filter((i) =>
         isSameDay(new Date(i.loginTime), today)
@@ -86,7 +110,7 @@ const UserActivities = () => {
       );
     }
 
-    // Date picker filter
+    // Date picker
     if (dateFilter) {
       data = data.filter((i) =>
         isSameDay(
@@ -97,7 +121,13 @@ const UserActivities = () => {
     }
 
     return data;
-  }, [activities, roleFilter, dateFilter, quickFilter]);
+  }, [
+    activities,
+    roleFilter,
+    dateFilter,
+    quickFilter,
+    activeOnly,
+  ]);
 
   /* ----------------------------------
      Pagination
@@ -126,7 +156,7 @@ const UserActivities = () => {
       "Time Spent": calculateDuration(
         item.loginTime,
         item.logoutTime
-      )
+      ),
     }));
 
     const ws = XLSX.utils.json_to_sheet(excelData);
@@ -136,7 +166,7 @@ const UserActivities = () => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow p-4 sm:p-6">
+    <div className="bg-white rounded-xl shadow p-4 sm:p-1">
       {/* Header */}
       <div className="flex flex-col lg:flex-row gap-4 justify-between mb-3">
         <h2 className="text-xl font-bold">
@@ -144,7 +174,22 @@ const UserActivities = () => {
         </h2>
 
         <div className="flex flex-wrap gap-3">
-          {/* Role Filter */}
+          {/* Active toggle */}
+          <button
+            onClick={() => {
+              setActiveOnly((p) => !p);
+              setCurrentPage(1);
+            }}
+            className={`px-4 rounded border font-bold ${
+              activeOnly
+                ? "bg-green-600 text-white"
+                : "bg-white text-green-600 border-green-600"
+            }`}
+          >
+            Active
+          </button>
+
+          {/* Role filter */}
           <select
             value={roleFilter}
             onChange={(e) => {
@@ -157,9 +202,10 @@ const UserActivities = () => {
             <option value="user">User</option>
             <option value="admin">Admin</option>
             <option value="superadmin">Super Admin</option>
+            <option value="teacher">Teacher</option>
           </select>
 
-          {/* Quick Filter */}
+          {/* Quick filter */}
           <select
             value={quickFilter}
             onChange={(e) => {
@@ -175,7 +221,7 @@ const UserActivities = () => {
             <option value="last2days">Last 2 Days</option>
           </select>
 
-          {/* Date Picker */}
+          {/* Date picker */}
           <div className="flex items-center gap-2">
             <FontAwesomeIcon icon={faCalendarDays} />
             <input
@@ -231,17 +277,32 @@ const UserActivities = () => {
                     {item.username}
                   </td>
                   <td className="px-4 py-2 capitalize">
-                    {item.role}
+                    <span
+                      className={`rounded-xl px-3 text-sm font-semibold
+                        ${
+                          item.role === "superadmin"
+                            ? "bg-purple-300"
+                            : item.role === "admin"
+                            ? "bg-orange-300"
+                            : item.role === "teacher"
+                            ? "bg-blue-300"
+                            : "bg-gray-200"
+                        }`}
+                    >
+                      {item.role}
+                    </span>
                   </td>
                   <td className="px-4 py-2">
                     {new Date(item.loginTime).toLocaleString()}
                   </td>
-                  <td className={`px-4 py-2`}>
-                    {item.logoutTime
-                      ? new Date(
-                          item.logoutTime
-                        ).toLocaleString()
-                      : "Active"}
+                  <td className="px-4 py-2">
+                    {item.logoutTime ? (
+                      new Date(item.logoutTime).toLocaleString()
+                    ) : (
+                      <span className="text-green-600 bg-green-200 px-2 rounded-xl">
+                        Active
+                      </span>
+                    )}
                   </td>
                   <td className="px-4 py-2 font-semibold text-blue-600">
                     {calculateDuration(
@@ -266,11 +327,11 @@ const UserActivities = () => {
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-end gap-3 mt-4">
+      <div className="flex justify-end gap-3 mt-2">
         <button
           disabled={currentPage === 1}
           onClick={() => setCurrentPage((p) => p - 1)}
-          className={`px-4 py-1 rounded ${
+          className={`px-4  rounded ${
             currentPage === 1
               ? "bg-gray-300 cursor-not-allowed"
               : "bg-blue-600 text-white"
@@ -280,9 +341,11 @@ const UserActivities = () => {
         </button>
 
         <button
-          disabled={currentPage === totalPages || totalPages === 0}
+          disabled={
+            currentPage === totalPages || totalPages === 0
+          }
           onClick={() => setCurrentPage((p) => p + 1)}
-          className={`px-4 py-1 rounded ${
+          className={`px-4 rounded ${
             currentPage === totalPages || totalPages === 0
               ? "bg-gray-300 cursor-not-allowed"
               : "bg-blue-600 text-white"

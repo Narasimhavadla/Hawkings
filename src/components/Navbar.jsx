@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
+import {logoutUser} from "../utils/logout"
+
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -17,12 +19,21 @@ function Navbar() {
 
   const navigate = useNavigate();
   const authUser = JSON.parse(localStorage.getItem("authUser"));
-
-  const handleLogout = () => {
-    localStorage.removeItem("authUser");
+  // const activityId = authUser.activityId
+  
+  const handleLogout = async () => {
+    // if (authUser?.activityId) {
+        await logoutUser();
+      // }   
+   localStorage.removeItem("authUser");
     localStorage.removeItem("token");
     navigate("/", { replace: true });
-  };
+    
+};
+
+
+
+
 
   const navItems = [
     { name: "Maths Competition Details", path: "/" },
@@ -49,7 +60,7 @@ function Navbar() {
                 `px-3 py-2 rounded transition-all duration-300
                 ${
                   isActive
-                    ? "bg-purple-700 scale-105"
+                    ? "bg-[#4F39F6] scale-105"
                     : "hover:bg-purple-800 hover:scale-105"
                 }`
               }

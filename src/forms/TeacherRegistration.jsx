@@ -40,13 +40,13 @@ export default function TeacherRegistration({ onSubmit, loading, successMessage 
         <Input label="Phone" name="phone" required value={form.phone} onChange={handleChange} />
         <Input label="Qualification" name="qualification" required value={form.qualification} onChange={handleChange} />
 
-        <Select
+        {/* <Select
           label="Type of Teaching"
           name="teachingType"
           value={form.teachingType}
           onChange={handleChange}
           options={["Online", "Offline", "Hybrid"]}
-        />
+        /> */}
 
         <Input label="Email" name="email" type="email" required value={form.email} onChange={handleChange} />
         <Input label="UPI ID" name="upiId" value={form.upiId} onChange={handleChange} />

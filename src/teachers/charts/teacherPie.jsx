@@ -17,11 +17,19 @@ export default function TeacherPieChart() {
   const [chartData, setChartData] = useState(null);
   const [loading, setLoading] = useState(true);
 
+    const api =import.meta.env.VITE_API_BASE_URL
+
+const token = localStorage.getItem("token")
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:3000/api/v1/teacher/${teacherId}/students-pie`
+          `${api}/teacher/${teacherId}/students-pie`,{
+            headers : {
+              Authorization : `Bearer ${token}`
+            }
+          }
         );
 
         if (res.data.status) {

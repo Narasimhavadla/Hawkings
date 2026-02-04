@@ -24,6 +24,10 @@ export default function TeacherBulkUpload() {
   const authUser = JSON.parse(localStorage.getItem("authUser"));
   const teacherId = authUser?.teacherId;
 
+    const api =import.meta.env.VITE_API_BASE_URL
+
+    const token = localStorage.getItem("token")
+
   /* ================= FETCH EXAMS ================= */
   useEffect(() => {
     fetchExams();
@@ -32,7 +36,15 @@ export default function TeacherBulkUpload() {
   const fetchExams = async () => {
     try {
       setExamLoading(true);
-      const res = await fetch("http://localhost:3000/api/v1/exam-schedule");
+      const res = await fetch(`${api}/exam-schedule`,
+        {
+        method: "GET", // optional, GET is default
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        }
+      }
+      );
       const data = await res.json();
       setExams(data.data.filter((e) => e.status === "active"));
     } catch {
@@ -116,7 +128,7 @@ export default function TeacherBulkUpload() {
       };
 
       const res = await fetch(
-        "http://localhost:3000/api/v1/student/bulk",
+        `${api}/student/bulk`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -143,7 +155,7 @@ export default function TeacherBulkUpload() {
     <div className="min-h-screen bg-gray-100 p-4 md:p-8">
       <div className="mx-auto max-w-7xl">
         <h1 className="text-2xl font-bold mb-2">Bulk Upload Students</h1>
-        <p className="mb-6 text-gray-600">
+        <p className="mb-6 text-gray-600 bg-blue-400 p-2 rounded-xl text-center text-white text-xl">
           Select exam → upload Excel → pay → register students
         </p>
 
@@ -167,7 +179,8 @@ export default function TeacherBulkUpload() {
                   </span>
                 )}
                 <h3 className="font-bold text-lg">{exam.examName}</h3>
-                <p className="text-indigo-600 mt-2">Fee: ₹{exam.amount}</p>
+                <p className="text-indigo-600 mt-2">Fee: <span className="font-semibold">₹{exam.amount}</span></p>
+                <p className="text-s opacity-50">Click to select</p>
               </div>
             );
           })}

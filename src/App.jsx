@@ -14,7 +14,7 @@ import TeacherLayout from "./teachers/TeacherLayout.JSX";
 import Books from "./pages/books";
 import StudentFeedBack from "./pages/StudentFB";
 import ParentFeedBack from "./pages/TeacherFB";
-
+import { logoutUser } from "./utils/logout"; 
 
 
 
@@ -34,6 +34,17 @@ function App() {
     return () =>
       window.removeEventListener("popstate", handlePopState);
   }, [navigate]);
+
+  useEffect(() => {
+    const handleUnload = () => {
+      logoutUser();
+    };
+
+    window.addEventListener("beforeunload", handleUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleUnload);
+    };
+  }, []);
 
   return (
     <div>

@@ -43,12 +43,12 @@ export default function StudentForm({ onSubmit, loading, successMessage }) {
       />
 
       <InputField icon={faUser} name="name" label="Student Name" required onChange={handleChange} />
+      <InputField icon={faSchool} name="institute" label="Institute Name" required onChange={handleChange} />
       <InputField icon={faUser} name="fathername" label="Father Name" required onChange={handleChange} />
       <InputField icon={faEnvelope} type="email" name="email" label="Email" required onChange={handleChange} />
       <InputField icon={faPhone} name="phone" label="Phone Number" required onChange={handleChange} />
       <InputField icon={faPhone} name="altPhone" label="Alternate Phone" onChange={handleChange} />
       <InputField icon={faCalendarDays} type="date" name="dob" label="Date of Birth" onChange={handleChange} />
-      <InputField icon={faSchool} name="institute" label="Institute Name" required onChange={handleChange} />
       <InputSelect icon={faLocationDot} name="state" label="State" required onChange={handleChange} options={["Telangana","Andhra Pradesh","Karnataka","Tamil Nadu"]} />
       <InputField icon={faLocationDot} name="city" label="City" required onChange={handleChange} />
       <InputField name="pincode" label="Pin Code" required onChange={handleChange} />

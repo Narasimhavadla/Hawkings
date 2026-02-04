@@ -22,6 +22,8 @@ export default function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const api = import.meta.env.VITE_API_BASE_URL
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError("");
@@ -34,12 +36,11 @@ export default function Login() {
 
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/v1/login",
+        `${api}/login`,
         formData
       );
 
       const { token, user } = res.data;
-      const loginTime = new Date().toISOString();
 
       localStorage.setItem("token", token);
       localStorage.setItem(
@@ -49,9 +50,7 @@ export default function Login() {
           username: user.username,
           role: user.role,
           teacherId: user.teacherId || null,   
-          loginTime,
-            
-        
+          activityId: user.activityId,
         })
       );
 
