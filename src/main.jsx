@@ -26,8 +26,8 @@ createRoot(document.getElementById('root')).render(
         theme="light"
       />
     {/* <OngoingStatus /> */}
-    {/* <WelcomeModal /> */}
-    <OfferModal />
+    <WelcomeModal />
+    {/* <OfferModal /> */}
       
       <App />
     </BrowserRouter>

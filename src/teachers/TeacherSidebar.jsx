@@ -5,6 +5,7 @@ import {
   faUpload,
   faIndianRupee,
   faPlus,
+  faBookOpen,
 } from "@fortawesome/free-solid-svg-icons";
 
 const TeacherSidebar = ({ activeTab, setActiveTab }) => {
@@ -15,6 +16,7 @@ const TeacherSidebar = ({ activeTab, setActiveTab }) => {
     { id: "students", label: "Register Students", icon: faUserGraduate },
     { id: "bulkUpload", label: "Bulk Upload", icon: faUpload },
     { id: "payment", label: "Payment", icon: faIndianRupee },
+    { id: "books", label: "Books", icon: faBookOpen },
     { id: "reffer", label: "Reffer", icon: faPlus },
   ];
 

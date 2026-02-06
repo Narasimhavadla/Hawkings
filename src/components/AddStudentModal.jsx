@@ -80,11 +80,13 @@ export default function AddStudentModal({ onClose, refresh }) {
           <Input label="Student Name" name="name" icon={faUser} onChange={handleChange} />
           <Input label="Father Name" name="fathername" icon={faUser} onChange={handleChange} />
 
+          <div>
+            <p>class</p>
           <select
             name="Class"
             value={form.Class}
             onChange={handleChange}
-            className="border rounded-lg h-11 px-3"
+            className="border rounded-lg h-11 px-3 w-full"
           >
             <option value="">Select Class</option>
             <option value="Class-4">Class 4</option>
@@ -94,6 +96,7 @@ export default function AddStudentModal({ onClose, refresh }) {
             <option value="Class-8">Class 8</option>
             <option value="Class-9">Class 9</option>
           </select>
+          </div>
 
           <Input label="Email" name="email" icon={faEnvelope} onChange={handleChange} />
           <Input label="Phone" name="phone" icon={faPhone} onChange={handleChange} />
@@ -112,16 +115,19 @@ export default function AddStudentModal({ onClose, refresh }) {
           <Input label="City" name="city" onChange={handleChange} />
           <Input label="Pincode" name="pincode" onChange={handleChange} />
 
+          <div>
+            <p>status</p>
           <select
             name="Status"
             value={form.Status}
             onChange={handleChange}
-            className="border rounded-lg h-11 px-3"
+            className="border rounded-lg h-11 px-3 w-full"
           >
             <option value="pending">Pending</option>
             <option value="Completed">Completed</option>
             <option value="rejected">Rejected</option>
           </select>
+          </div>
 
         </div>
 

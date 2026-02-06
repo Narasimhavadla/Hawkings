@@ -10,7 +10,9 @@ import {
   faChalkboard,
   faIndianRupee,
   faPlus,
-  faAd
+  faAd,
+  faBook,
+  faBookOpen
 } from "@fortawesome/free-solid-svg-icons";
 
 const Sidebar = ({ activeTab, setActiveTab }) => {
@@ -27,7 +29,9 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
     { id: "parent", label: "Parent Testimonials", icon: faComments },
     { id: "student", label: "Student Testimonials", icon: faCommentDots },
     { id: "payment", label: "Payments", icon: faIndianRupee },
-    { id: "advertisement", label: "AD's", icon: faAd },
+    // { id: "advertisement", label: "AD's", icon: faAd },
+    { id: "books", label: "Book's", icon: faBookOpen },
+    { id: "orderbooks", label: "Book's Orders", icon: faBook },
     
 
     // ✅ Show only for SUPER ADMIN

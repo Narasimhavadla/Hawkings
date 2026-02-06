@@ -17,7 +17,7 @@ export const logoutUser = async () => {
       { activityId },
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`, 
         },
       }
     );

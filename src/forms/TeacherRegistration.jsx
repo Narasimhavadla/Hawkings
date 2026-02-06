@@ -84,7 +84,7 @@ export default function TeacherRegistration({ onSubmit, loading, successMessage 
       <button
         type="submit"
         disabled={loading}
-        className="w-full py-3 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition-all disabled:opacity-60"
+        className="w-full py-3 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-green-700 transition-all disabled:opacity-60"
       >
         Register Teacher
       </button>

@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo,useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUser,
@@ -11,40 +11,35 @@ import {
   faTimesCircle,
   faClock
 } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 export default function Payment() {
-  const [payments] = useState([
-    {
-      teacher: "Teacher A",
-      school: "ABC High School",
-      exam: "Hawking Maths Olympiad – Level 1",
-      students: 25,
-      amount: 5000,
-      method: "Razorpay",
-      date: "2026-01-20",
-      status: "Success",
-    },
-    {
-      teacher: "Teacher B",
-      school: "XYZ Public School",
-      exam: "Hawking Maths Olympiad – Level 2",
-      students: 15,
-      amount: 3000,
-      method: "UPI",
-      date: "2026-01-22",
-      status: "Pending",
-    },
-    {
-      teacher: "Teacher C",
-      school: "Global School",
-      exam: "Hawking Maths Olympiad – Level 1",
-      students: 40,
-      amount: 8000,
-      method: "Card",
-      date: "2026-01-24",
-      status: "Failed",
-    },
-  ]);
+
+  const api = import.meta.env.VITE_API_BASE_URL
+
+  const token = localStorage.getItem("token")
+
+  const [payments,setPayments] = useState([])
+
+
+
+  useEffect(() =>{
+    try{
+        const fetchPyments = async () =>{
+          const res = await axios.get(`${api}/payments/dashboard`,{
+            headers: {
+              Authorization : `Bearer ${token}`
+            }
+          })
+          setPayments(res.data.payments)
+        }
+
+        fetchPyments()
+    }
+    catch(err){
+      console.log(err)
+    }
+  },[])
 
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
@@ -76,9 +71,23 @@ export default function Payment() {
     return faTimesCircle;
   };
 
-  const totalRevenue = filteredPayments
-    .filter(p => p.status === "Success")
-    .reduce((sum, p) => sum + p.amount, 0);
+const totalRevenue = filteredPayments
+  .filter((p) => {
+    if (p.status !== "Success") return false;
+
+    const paymentDate = new Date(p.date);
+    const now = new Date();
+
+    return (
+      paymentDate.getMonth() === now.getMonth() &&
+      paymentDate.getFullYear() === now.getFullYear()
+    );
+  })
+  .reduce((sum, p) => sum + p.amount, 0);
+
+
+
+  
 
   return (
     <div className="min-h-screen bg-gray-100 p-4 md:p-8">
@@ -99,12 +108,12 @@ export default function Payment() {
             <p className="text-sm text-gray-500">Successful Revenue</p>
             <p className="text-2xl font-bold text-green-600">₹{totalRevenue}</p>
           </div>
-          <div className="rounded-xl bg-white p-5 shadow">
+          {/* <div className="rounded-xl bg-white p-5 shadow">
             <p className="text-sm text-gray-500">Pending / Failed</p>
             <p className="text-2xl font-bold text-yellow-600">
               {filteredPayments.filter(p => p.status !== "Success").length}
             </p>
-          </div>
+          </div> */}
         </div>
 
         {/* ===== FILTERS ===== */}
@@ -137,7 +146,7 @@ export default function Payment() {
                   <th className="px-4 py-3 text-left">Teacher</th>
                   <th className="px-4 py-3 text-left">School</th>
                   <th className="px-4 py-3 text-left">Exam</th>
-                  <th className="px-4 py-3 text-left">Students</th>
+                  {/* <th className="px-4 py-3 text-left">Students</th> */}
                   <th className="px-4 py-3 text-left">Amount</th>
                   <th className="px-4 py-3 text-left">Date</th>
                   <th className="px-4 py-3 text-left">Status</th>
@@ -148,26 +157,29 @@ export default function Payment() {
                   <tr key={i} className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}>
                     <td className="px-4 py-2">
                       <FontAwesomeIcon icon={faUser} className="mr-2 text-gray-400" />
-                      {p.teacher}
+                    <span className={`${p.teacher == "student" ? "bg-blue-300 px-2 rounded-xl" : "bg-orange-400 px-2 rounded-xl"}`}>{p.teacher}</span>
+
+                  
+
                     </td>
                     <td className="px-4 py-2">
-                      <FontAwesomeIcon icon={faSchool} className="mr-2 text-gray-400" />
+                      {/* <FontAwesomeIcon icon={faSchool} className="mr-2 text-gray-400" /> */}
                       {p.school}
                     </td>
                     <td className="px-4 py-2">
-                      <FontAwesomeIcon icon={faBook} className="mr-2 text-gray-400" />
+                      {/* <FontAwesomeIcon icon={faBook} className="mr-2 text-gray-400" /> */}
                       {p.exam}
                     </td>
-                    <td className="px-4 py-2">
+                    {/* <td className="px-4 py-2">
                       <FontAwesomeIcon icon={faUsers} className="mr-2 text-gray-400" />
                       {p.students}
-                    </td>
+                    </td> */}
                     <td className="px-4 py-2 font-semibold">
-                      <FontAwesomeIcon icon={faMoneyBill} className="mr-2 text-gray-400" />
+                      {/* <FontAwesomeIcon icon={faMoneyBill} className="mr-2 text-gray-400" /> */}
                       ₹{p.amount}
                     </td>
                     <td className="px-4 py-2">
-                      <FontAwesomeIcon icon={faCalendar} className="mr-2 text-gray-400" />
+                      {/* <FontAwesomeIcon icon={faCalendar} className="mr-2 text-gray-400" /> */}
                       {p.date}
                     </td>
                     <td className="px-4 py-2">

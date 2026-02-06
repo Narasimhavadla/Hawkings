@@ -36,7 +36,7 @@ function LandingPage() {
       </h1>
 
      
-      <div className="relative mt-24 space-y-52 pb-40">
+      <div className="relative mt-24 space-y-52 pb-28">
 
         {/* LEVEL 1 */}
         <div className="sticky top-36 w-[80%] md:w-[70%] mx-auto">

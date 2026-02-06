@@ -1,10 +1,13 @@
 import axios from "axios";
 
 function RazorpayPayment() {
+
+  const api = import.meta.env.VITE_API_BASE_URL
+
   const handlePayment = async () => {
     try {
       const { data: order } = await axios.post(
-        "http://localhost:3000/api/v1/create-order",
+        `${api}/create-order`,
         { amount: 1 }
       );
 
@@ -18,7 +21,7 @@ function RazorpayPayment() {
 
         handler: async function (response) {
           const verifyRes = await axios.post(
-            "http://localhost:3000/api/v1/verify-payment",
+            `${api}/verify-payment`,
             {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,

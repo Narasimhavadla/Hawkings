@@ -18,6 +18,9 @@ function MathsCompReg() {
   const [step, setStep] = useState(1); // 1 = form, 2 = payment, 3 = success
   const [studentPayload, setStudentPayload] = useState(null);
 
+
+  const api = import.meta.env.VITE_API_BASE_URL
+
   const handleSubmitStudent = async (studentData) => {
     setStudentPayload({
       ...studentData,
@@ -48,7 +51,7 @@ function MathsCompReg() {
       };
 
       await axios.post(
-        "http://localhost:3000/api/v1/teachers",
+        `${api}/teachers`,
         payload
       );
 
@@ -115,87 +118,89 @@ function MathsCompReg() {
 
   /* ---------------- STEP 2 PAYMENT ---------------- */
   function StudentPayment({ onSuccess }) {
-    const handlePayment = async () => {
-      try {
-        setLoading(true);
+   const handlePayment = async () => {
+  try {
+    setLoading(true);
 
-          const res = await fetch("http://localhost:3000/api/v1/student/create-order", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ amount : 1 }),
-        });
+    const res = await fetch(`${api}/student/create-order`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ amount: 1 }),
+    });
 
-        const order = await res.json();
-        if (!order.success) return alert("Order creation failed");
-            
+    const data = await res.json();
+    if (!data.success) {
+      setLoading(false);
+      return alert("Order creation failed");
+    }
 
-        const options = {
-          key: "rzp_test_S8sJNP1bvQjOn8", 
-          amount: order.amount,
-          currency: "INR",
-          name: "Hawkings Maths Olympiad",
-          description: "₹1 Test Payment",
-          order_id: order.id,
-          handler: async function (response) {
-            // Verify payment in backend
-            // const verifyRes = await axios.post(
-            //   "http://localhost:3000/api/v1/student/verify-payment",
-            //   {
-            //     razorpay_order_id: response.razorpay_order_id,
-            //     razorpay_payment_id: response.razorpay_payment_id,
-            //     razorpay_signature: response.razorpay_signature,
-            //     amount: 1,
-            //     studentData: studentPayload,
-            //   }
-            // );
+    const order = data.order;
 
-              const verifyRes = await fetch("http://localhost:3000/api/v1/student/verify-payment", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-              amount :1,
-              studentData: studentPayload,
-            }),
-          });
+    const options = {
+      key: "rzp_test_S8sJNP1bvQjOn8",
+      amount: order.amount,
+      currency: "INR",
+      name: "Hawkings Maths Olympiad",
+      description: "₹1 Test Payment",
+      order_id: order.id,
 
-            if (verifyRes.data.success) {
-              // Save student to DB after payment
-              // await axios.post(
-              //   "http://localhost:3000/api/v1/student",
-              //   studentPayload
-              // );
-
-              onSuccess();
-            } else {
-              alert("❌ Payment verification failed");
+      handler: async function (response) {
+        try {
+          const verifyRes = await fetch(
+            `${api}/student/verify-payment`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                amount: 1,
+                studentData: studentPayload,
+              }),
             }
-          },
-          prefill: {
-            name: studentPayload?.name || "Test Student",
-            email: studentPayload?.email || "test@student.com",
-            contact: studentPayload?.phone || "9999999999",
-          },
-          theme: { color: "#4f46e5" },
-          modal: {
-            ondismiss: () => {
-              alert("Payment popup closed");
-              setLoading(false);
-            },
-          },
-        };
+          );
 
-        const rzp = new window.Razorpay(options);
-        rzp.open();
-      } catch (err) {
-        console.error("Payment error:", err);
-        alert("Something went wrong with payment");
-      } finally {
-        setLoading(false);
-      }
+          const result = await verifyRes.json();
+
+          if (result.success) {
+            onSuccess();
+          } else {
+            alert("Payment verification failed");
+          }
+        } catch (err) {
+          console.error(err);
+          alert("Verification error");
+        } finally {
+          setLoading(false);
+        }
+      },
+
+      prefill: {
+        name: studentPayload?.name,
+        email: studentPayload?.email,
+        contact: studentPayload?.phone,
+      },
+
+      theme: { color: "#4f46e5" },
+
+      modal: {
+        ondismiss: () => {
+          setLoading(false);
+          alert("Payment popup closed");
+        },
+      },
     };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  } catch (err) {
+    console.error(err);
+    alert("Payment error");
+    setLoading(false);
+  }
+};
+
 
     return (
       <div className="bg-white rounded-2xl shadow-lg p-8 text-center max-w-md mx-auto mt-10">
@@ -218,7 +223,7 @@ function MathsCompReg() {
 
   /* ---------------- STEP 3 SUCCESS ---------------- */
   function SuccessCard({ studentName, amountPaid = 1 }) {
-    return (
+    return ( 
       <div className="max-w-md mx-auto bg-white rounded-3xl shadow-2xl p-8 text-center mt-8">
         <div className="flex justify-center mb-6">
           {/* <CheckCircleIcon className="w-20 h-20 text-green-500" /> */}
@@ -255,6 +260,8 @@ function MathsCompReg() {
 
         <button
           onClick={() => window.location.reload()}
+          
+
           className="mt-6 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg transition-all"
         >
           Done
@@ -278,19 +285,19 @@ function MathsCompReg() {
         }
       />
 
-      <div className="min-h-screen py-6 px-4 bg-gradient-to-br from-indigo-50 to-purple-100">
+      <div className="min-h-screen py-4 px-4 bg-gradient-to-br from-indigo-50 to-purple-100">
         {/* Header */}
-        <div className="max-w-5xl mx-auto text-center mb-6">
-          <h1 className="text-3xl md:text-4xl font-extrabold text-indigo-700">
+        <div className="max-w-5xl mx-auto text-center mb-4">
+          <h1 className="text-2xl md:text-3xl font-extrabold text-indigo-700">
             Hawking’s National Maths Competition
           </h1>
-          <p className="text-gray-600 mt-2 text-base md:text-lg">
+          <p className="text-gray-600 mt-1 md:text-lg text-sm">
             A prestigious platform for young minds to explore logic, reasoning, and excellence
           </p>
         </div>
 
         {/* Toggle */}
-        <div className="max-w-md mx-auto mb-4">
+        <div className="max-w-md mx-auto mb-2">
           <div className="flex bg-white rounded-xl shadow-md ">
             <ToggleButton
               active={activeForm === "student"}

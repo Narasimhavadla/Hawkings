@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
+import Books from "../pages/books";
 
 
 
@@ -10,7 +11,7 @@ import TeacherDashboard from "./dashboard";
 import TeacherStudents from "./TeacherStudents";
 import TeacherBulkUpload from "./TeacherBulkUpload";
 import TeacherPayment from "./TeacherPayment";
-import TeacherSidebar from "./teacherSidebar";
+import TeacherSidebar from "./TeacherSidebar";
 import TeacherReffer from "./TeacherReffer";
 
 const TeacherLayout = () => {
@@ -49,6 +50,8 @@ const TeacherLayout = () => {
         return <TeacherPayment />;
       case "reffer":
         return <TeacherReffer />;
+      case "books":
+        return <Books />;
       default:
         return <TeacherDashboard />;
     }

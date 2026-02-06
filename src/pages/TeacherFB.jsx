@@ -1,4 +1,13 @@
 import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faFaceAngry,
+  faFaceFrown,
+  faFaceMeh,
+  faFaceSmile,
+  faFaceGrinStars,
+} from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 export default function ParentFeedBack() {
   const [form, setForm] = useState({
@@ -11,6 +20,43 @@ export default function ParentFeedBack() {
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
 
+  const api = import.meta.env.VITE_API_BASE_URL;
+  const navigate = useNavigate();
+
+  /* ================= ICON RATINGS ================= */
+  const ratings = [
+    {
+      value: 1,
+      icon: faFaceAngry,
+      label: "Very Bad",
+      color: "text-red-500",
+    },
+    {
+      value: 2,
+      icon: faFaceFrown,
+      label: "Bad",
+      color: "text-orange-500",
+    },
+    {
+      value: 3,
+      icon: faFaceMeh,
+      label: "Okay",
+      color: "text-yellow-500",
+    },
+    {
+      value: 4,
+      icon: faFaceSmile,
+      label: "Good",
+      color: "text-green-500",
+    },
+    {
+      value: 5,
+      icon: faFaceGrinStars,
+      label: "Excellent",
+      color: "text-indigo-600",
+    },
+  ];
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -19,6 +65,7 @@ export default function ParentFeedBack() {
     setForm({ ...form, rating: value });
   };
 
+  /* ================= SUBMIT ================= */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -33,18 +80,11 @@ export default function ParentFeedBack() {
 
     try {
       const res = await fetch(
-        "http://localhost:3000/api/v1/parent-testinomials",
+        `${api}/parent-testinomials`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: form.name,
-            content: form.content,
-            rating: form.rating,
-            // ❌ isPublished intentionally NOT sent
-          }),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
         }
       );
 
@@ -54,10 +94,18 @@ export default function ParentFeedBack() {
         throw new Error(data.message || "Failed to submit feedback");
       }
 
+      /* ✅ Success */
       setSuccess(
         "Thank you! Your feedback has been submitted for review."
       );
+
       setForm({ name: "", content: "", rating: 0 });
+
+      /* ✅ Redirect after 2 sec */
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+
     } catch (err) {
       setError(err.message);
     } finally {
@@ -66,35 +114,39 @@ export default function ParentFeedBack() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 px-4 py-10">
-      <div className="mx-auto max-w-3xl rounded-2xl bg-white p-6 shadow-lg md:p-10">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 px-4 py-2 flex items-center justify-center">
+
+      {/* ================= CARD ================= */}
+      <div className="w-full max-w-xl bg-white rounded-3xl shadow-2xl p-6 md:p-8">
+
         {/* Header */}
-        <div className="mb-6 text-center">
-          <h1 className="text-3xl font-bold text-gray-800">
+        <div className="text-center mb-2">
+          <h1 className="text-xl md:text-2xl font-bold text-gray-800">
             Parent Feedback
           </h1>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-1 text-gray-600 text-sm md:text-base">
             Share your experience as a parent to help us improve
           </p>
         </div>
 
-        {/* Alerts */}
+        {/* Messages */}
         {error && (
-          <div className="mb-4 rounded-lg bg-red-100 p-3 text-sm text-red-600">
+          <div className="mb-2 rounded-lg bg-red-100 p-3 text-sm text-red-600 text-center">
             {error}
           </div>
         )}
         {success && (
-          <div className="mb-4 rounded-lg bg-green-100 p-3 text-sm text-green-600">
+          <div className="mb-4 rounded-lg bg-green-100 p-2 text-sm text-green-600 text-center">
             {success}
           </div>
         )}
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-4">
+
           {/* Name */}
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Parent Name
             </label>
             <input
@@ -102,46 +154,78 @@ export default function ParentFeedBack() {
               name="name"
               value={form.name}
               onChange={handleChange}
-              placeholder="Enter your name"
-              className="w-full rounded-xl border px-4 py-2 focus:border-indigo-500 focus:outline-none"
+              placeholder="Enter your full name"
+              className="w-full rounded-xl border px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
             />
           </div>
 
           {/* Feedback */}
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Feedback
             </label>
             <textarea
               name="content"
               value={form.content}
               onChange={handleChange}
-              rows="4"
-              placeholder="Share your feedback about your child's learning experience..."
-              className="w-full resize-none rounded-xl border px-4 py-2 focus:border-indigo-500 focus:outline-none"
+              rows="3"
+              placeholder="Write your feedback about your child's learning experience..."
+              className="w-full resize-none rounded-xl border px-4 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
             />
           </div>
 
-          {/* Rating */}
+          {/* ================= ICON RATING ================= */}
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-700">
-              Rating
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              How was your experience?
             </label>
-            <div className="flex gap-2">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <button
-                  key={star}
-                  type="button"
-                  onClick={() => handleRating(star)}
-                  className={`text-3xl transition ${
-                    star <= form.rating
-                      ? "text-yellow-400"
-                      : "text-gray-300"
-                  }`}
-                >
-                  ★
-                </button>
-              ))}
+
+            <div className="flex items-center justify-between sm:justify-center gap-4 sm:gap-8 flex-wrap">
+
+              {ratings.map((item) => {
+                const isActive = form.rating === item.value;
+
+                return (
+                  <button
+                    key={item.value}
+                    type="button"
+                    onClick={() => handleRating(item.value)}
+                    className={`
+                      flex flex-col items-center
+                      transition-all duration-200
+                      ${
+                        isActive
+                          ? "scale-125"
+                          : "opacity-70 hover:scale-110"
+                      }
+                    `}
+                  >
+                    {/* Icon */}
+                    <FontAwesomeIcon
+                      icon={item.icon}
+                      className={`
+                        text-xl sm:text-2xl md:text-3xl
+                        ${isActive ? item.color : "text-gray-400"}
+                      `}
+                    />
+
+                    {/* Label */}
+                    <span
+                      className={`
+                        text-xs mt-1 font-medium
+                        ${
+                          isActive
+                            ? "text-indigo-600"
+                            : "text-gray-500"
+                        }
+                      `}
+                    >
+                      {item.label}
+                    </span>
+                  </button>
+                );
+              })}
+
             </div>
           </div>
 
@@ -149,15 +233,26 @@ export default function ParentFeedBack() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-xl bg-indigo-600 px-6 py-3 font-semibold text-white shadow hover:bg-indigo-700 disabled:opacity-60"
+            className="
+              w-full
+              rounded-xl
+              bg-indigo-600
+              px-6 py-2
+              font-semibold text-white
+              shadow
+              hover:bg-indigo-700
+              active:scale-95
+              transition
+              disabled:opacity-60
+            "
           >
             {loading ? "Submitting..." : "Submit Feedback"}
           </button>
 
-          {/* Info */}
           <p className="text-center text-xs text-gray-500">
             Your feedback will be reviewed before being published.
           </p>
+
         </form>
       </div>
     </div>

@@ -14,6 +14,8 @@ import AdminTeacherRegistration from "./adminTeachers";
 import Reffarals from "../superAdmin/Refferals";
 import Payment from "./Payment";
 import AdvertisementPage from "./AvertisementPage";
+import Books from "./AdminBooks";
+import BookOrderPayments from "../components/BooksOrderPayments";
 
 const AdminLayout = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -59,6 +61,10 @@ const AdminLayout = () => {
         return <Payment />;
       case "advertisement":
         return <AdvertisementPage />;
+      case "books":
+        return <Books />;
+      case "orderbooks":
+        return <BookOrderPayments />;
         
 
       // 🛡 Super Admin protection

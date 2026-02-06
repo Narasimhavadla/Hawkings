@@ -47,11 +47,11 @@ export default function TeacherRefer() {
           title="Total Referrals"
           value={data.totalReferrals}
         />
-        <Card
+        {/* <Card
           icon={faGift}
           title="Cashback Earned"
           value={`₹ ${data.totalCashback}`}
-        />
+        /> */}
       </div>
     </div>
   );

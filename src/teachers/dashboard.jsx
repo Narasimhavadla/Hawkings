@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import TeacherPieChart from "./charts/teacherPie";
+import olympiadImg from "../assets/banner.png";
+
 
 export default function TeacherDashboard() {
   const [dashboardData, setDashboardData] = useState({
@@ -101,12 +103,13 @@ const token = localStorage.getItem("token")
           </div>
         </div>
 
-        <div className="rounded-2xl bg-white p-6 shadow">
+        <div className="rounded-2xl bg-white p-4 shadow content-center">
           {/* <h2 className="mb-4 font-semibold">Class-wise Performance</h2>
           <div className="flex h-48 items-center justify-center rounded-xl bg-gray-50 text-gray-400">
             Add run
           </div> */}
-          <h1>Advertisement</h1>
+          {/* <h1>Advertisement</h1> */}
+          <img src={olympiadImg} className="object-cover"></img>
         </div>
         
       </div>
