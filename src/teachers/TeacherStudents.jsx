@@ -100,38 +100,44 @@ const token = localStorage.getItem("token")
   };
 
   /* ================= REGISTER STUDENTS AFTER PAYMENT ================= */
-  const registerStudents = async (paymentData) => {
-    try {
-      setLoading(true);
+ const registerStudents = async (paymentData) => {
+  try {
+    setLoading(true);
 
-      const payload = {
-        examId: selectedExam.id,
-        teacherId,
-        paymentId: paymentData.paymentId,
-        students: students.map((s) => ({
-          ...s,
-          Status: "paid",
-        })),
-      };
+    const payload = {
+      examId: selectedExam.id,
+      teacherId,
+      paymentId: paymentData.paymentId,
+      students: students.map((s) => ({
+        ...s,
+        Status: "paid",
+      })),
+    };
 
-      const res = await fetch(`${api}/student/bulk`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+    const res = await fetch(`${api}/student/bulk`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // ✅ REQUIRED
+      },
+      body: JSON.stringify(payload),
+    });
 
-      if (!res.ok) throw new Error();
+    if (!res.ok) throw new Error();
 
-      toast.success("Payment successful & students registered!");
-      setStudents([emptyStudent()]);
-      setSelectedExam(null);
-    } catch {
-      toast.error("Payment done, but student registration failed");
-    } finally {
-      setLoading(false);
-      setShowPaymentModal(false);
-    }
-  };
+    toast.success("Payment successful & students registered!");
+    setStudents([emptyStudent()]);
+    setSelectedExam(null);
+
+  } catch (err) {
+    toast.error("Payment done, but student registration failed");
+    console.log(err)
+  } finally {
+    setLoading(false);
+    setShowPaymentModal(false);
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">

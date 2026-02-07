@@ -131,7 +131,10 @@ export default function TeacherBulkUpload() {
         `${api}/student/bulk`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
           body: JSON.stringify(payload),
         }
       );
@@ -260,7 +263,7 @@ export default function TeacherBulkUpload() {
           onProceed={({ amount }) => {
             RazorpayCheckout({
               amount,
-              examName: selectedExam.name,
+              examName: selectedExam.examName,
               onSuccess: registerBulkStudents,
               teacherId : teacherId
             });

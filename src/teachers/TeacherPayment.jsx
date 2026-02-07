@@ -32,18 +32,18 @@ export default function TeacherPayments() {
     }
   };
 
-  const downloadInvoice = (invoiceNo) => {
-    window.open(
-      `${API_BASE}/invoices/${invoiceNo}`,
-      "_blank"
-    );
-  };
+  // const downloadInvoice = (invoiceNo) => {
+  //   window.open(
+  //     `${API_BASE}/invoices/${invoiceNo}`,
+  //     "_blank"
+  //   );
+  // };
 
   const totalAmount = payments.reduce((sum, p) => sum + p.amount, 0);
-  const totalStudents = payments.reduce(
-    (sum, p) => sum + (p.studentsCount || 0),
-    0
-  );
+  // const totalStudents = payments.reduce(
+  //   (sum, p) => sum + (p.studentsCount || 0),
+  //   0
+  // );
 
   if (loading) {
     return (
@@ -96,9 +96,9 @@ export default function TeacherPayments() {
                   <th className="px-4 py-3 text-left font-semibold text-gray-600">
                     Payment Date
                   </th>
-                  <th className="px-4 py-3 text-center font-semibold text-gray-600">
+                  {/* <th className="px-4 py-3 text-center font-semibold text-gray-600">
                     Invoice
-                  </th>
+                  </th> */}
                 </tr>
               </thead>
 
@@ -132,7 +132,7 @@ export default function TeacherPayments() {
                       {new Date(payment.createdAt).toLocaleDateString()}
                     </td>
                     <td className="px-4 py-3 text-center">
-                      <button
+                      {/* <button
                         className="inline-flex items-center gap-2 rounded-lg border px-3 py-1 text-indigo-600 hover:bg-indigo-50"
                         onClick={() =>
                           downloadInvoice(payment.invoiceNo)
@@ -140,7 +140,7 @@ export default function TeacherPayments() {
                       >
                         <FontAwesomeIcon icon={faDownload} />
                         Invoice
-                      </button>
+                      </button> */}
                     </td>
                   </tr>
                 ))}
