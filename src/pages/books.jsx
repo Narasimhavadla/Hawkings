@@ -93,7 +93,7 @@ export default function Books() {
                   alt={book.bookName}
                   className="
                     w-full
-                    h-44 sm:h-48 md:h-44 lg:h-48 xl:h-52
+                    h-40 sm:h-36 md:h-40 lg:h-44 xl:h-44
                     object-cover
                     hover:scale-105
                     transition duration-300

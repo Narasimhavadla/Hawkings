@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import TeacherPieChart from "./charts/teacherPie";
 import olympiadImg from "../assets/banner.png";
+import WallPostCarousel from "../forms/advertisementModals/WallPostCarousel";
 
 
 export default function TeacherDashboard() {
@@ -12,6 +13,8 @@ export default function TeacherDashboard() {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [wallPosts, setWallPosts] = useState([]);
+
   
     const authUser = JSON.parse(localStorage.getItem("authUser"));
   const teacherId = authUser?.teacherId;
@@ -45,6 +48,23 @@ const token = localStorage.getItem("token")
     };
 
     fetchDashboard();
+
+    const fetchWallPosts = async () => {
+  try {
+    const res = await axios.get(
+      `${api}/wall-posts/published`
+    );
+
+    if (res.data.status) {
+      setWallPosts(res.data.data || []);
+    }
+  } catch (err) {
+    console.error("Failed to load wall posts");
+  }
+};
+
+fetchWallPosts();
+
   }, [teacherId]);
 
   if (loading) {
@@ -62,6 +82,7 @@ const token = localStorage.getItem("token")
       </div>
     );
   }
+  
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -103,14 +124,18 @@ const token = localStorage.getItem("token")
           </div>
         </div>
 
-        <div className="rounded-2xl bg-white p-4 shadow content-center">
-          {/* <h2 className="mb-4 font-semibold">Class-wise Performance</h2>
-          <div className="flex h-48 items-center justify-center rounded-xl bg-gray-50 text-gray-400">
-            Add run
-          </div> */}
-          {/* <h1>Advertisement</h1> */}
-          <img src={olympiadImg} className="object-cover"></img>
-        </div>
+        {/* Advertisement / Wall Posters */}
+<div className="rounded-2xl bg-white p-4 shadow flex items-center justify-center">
+  {wallPosts.length > 0 ? (
+    <WallPostCarousel posts={wallPosts} />
+  ) : (
+    <img
+      src={olympiadImg}
+      className="object-cover rounded-xl w-full h-[220px]"
+    />
+  )}
+</div>
+
         
       </div>
 

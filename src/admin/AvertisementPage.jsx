@@ -1,174 +1,111 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faCircleCheck,
   faPlus,
-  faPlay,
-  faPause,
-  faLayerGroup,
-  faTrash,
+  faBullhorn,
+  faCircleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import WallPostManager from "../forms/advertisementModals/WallPostManager";
 
-const AD_TYPES = [
-  { key: "scrolling", label: "Scrolling", color: "from-indigo-500 to-indigo-600" },
-  { key: "slider", label: "Slider", color: "from-emerald-500 to-emerald-600" },
-  { key: "banner", label: "Banner", color: "from-orange-500 to-orange-600" },
-  { key: "modal", label: "Popup", color: "from-pink-500 to-pink-600" },
-];
-
-const ADS = [
-  { id: 1, type: "scrolling", title: "Latest Updates", status: true },
-  { id: 2, type: "scrolling", title: "Offers Strip", status: false },
-  { id: 3, type: "slider", title: "Hero Slider", status: true },
-  { id: 4, type: "banner", title: "Exam Banner", status: true },
-  { id: 5, type: "modal", title: "Welcome Popup", status: false },
+const MODALS = [
+  { key: "welcome", title: "Welcome Modal", desc: "Shown to new users" },
+  { key: "offer", title: "Offer Modal", desc: "Displays latest offers" },
+  { key: "ongoing", title: "Ongoing Status Modal", desc: "Shows live updates" },
 ];
 
 export default function AdvertisementPage() {
-  const [activeType, setActiveType] = useState("scrolling");
-  const [ads, setAds] = useState(ADS);
+  const [active, setActive] = useState("");
 
-  const toggleAd = (id) => {
-    setAds((prev) =>
-      prev.map((ad) =>
-        ad.id === id ? { ...ad, status: !ad.status } : ad
-      )
-    );
+  useEffect(() => {
+    const stored = localStorage.getItem("publishedModal");
+    if (stored) setActive(stored);
+  }, []);
+
+  const publishModal = (key) => {
+    localStorage.setItem("publishedModal", key);
+    setActive(key);
+
+    toast.success(`${key.toUpperCase()} modal published `, {
+      position: "top-right",
+      autoClose: 2000,
+      theme: "light",
+    });
   };
-
-  const deleteAd = (id) => {
-    if (window.confirm("Are you sure you want to delete this advertisement?")) {
-      setAds((prev) => prev.filter((ad) => ad.id !== id));
-    }
-  };
-
-  const liveAds = ads.filter((ad) => ad.status);
 
   return (
-    <div className="p-6 space-y-10 bg-gray-50 min-h-screen">
-      {/* HEADER */}
-      <div className="flex items-center justify-between">
+    <div className="p-6 bg-gray-50 min-h-screen">
+      {/* Toast Container */}
+      <ToastContainer />
+
+      {/* Header */}
+      <div className="w-full p-6 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl shadow-lg flex items-center gap-4">
+        <div className="bg-white/20 p-4 rounded-xl">
+          <FontAwesomeIcon icon={faBullhorn} size="2x" />
+        </div>
+
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">
-            Advertisement Control
-          </h1>
-          <p className="text-sm text-gray-500">
-            Manage live and inactive advertisements
+          <h1 className="text-2xl font-bold">Advertisement Panel</h1>
+          <p className="opacity-80 text-sm">
+            Control and publish all your modals from here
           </p>
         </div>
-        <button className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-          <FontAwesomeIcon icon={faPlus} /> Add Advertisement
-        </button>
       </div>
 
-      {/* AD TYPE SELECTOR */}
-      <div className="flex gap-4 overflow-x-auto pb-2">
-        {AD_TYPES.map((type) => (
-          <button
-            key={type.key}
-            onClick={() => setActiveType(type.key)}
-            className={`min-w-[150px] rounded-xl px-4 py-3 text-white bg-gradient-to-r ${type.color} ${
-              activeType === type.key
-                ? "scale-105 shadow-lg"
-                : "opacity-80 hover:opacity-100"
-            }`}
-          >
-            <FontAwesomeIcon icon={faLayerGroup} className="mb-2" />
-            <p className="font-semibold text-sm">{type.label}</p>
-          </button>
-        ))}
-      </div>
+      <p className="mt-4 text-xl opacity-60"><span className="mr-2 "><FontAwesomeIcon icon={faCircleExclamation}/></span>Only one Modal is allowed to publish !</p>
+      <div className="mt-3 grid md:grid-cols-3 gap-6">
+        {MODALS.map((modal) => {
+          const isActive = active === modal.key;
 
-      {/* AD CARDS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {ads
-          .filter((ad) => ad.type === activeType)
-          .map((ad) => (
+          return (
             <div
-              key={ad.id}
-              className="bg-white rounded-xl shadow-sm border p-5 space-y-4"
+              key={modal.key}
+              className={`relative bg-white border rounded-2xl p-6 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${
+                isActive
+                  ? "border-green-500 ring-2 ring-green-200"
+                  : "border-gray-200"
+              }`}
             >
-              <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-gray-800">{ad.title}</h3>
-                <span
-                  className={`text-xs px-3 py-1 rounded-full font-semibold ${
-                    ad.status
-                      ? "bg-green-100 text-green-700"
-                      : "bg-red-100 text-red-700"
-                  }`}
-                >
-                  {ad.status ? "LIVE" : "INACTIVE"}
+              {/* Status Badge */}
+              {isActive && (
+                <span className="absolute top-3 right-3 bg-green-600 text-white text-xs px-3 py-1 rounded-full shadow">
+                  LIVE
                 </span>
-              </div>
-
-              <button
-                onClick={() => toggleAd(ad.id)}
-                className="w-full flex items-center justify-center gap-2 border rounded-lg py-2 text-sm hover:bg-gray-100"
-              >
-                <FontAwesomeIcon icon={ad.status ? faPause : faPlay} />
-                {ad.status ? "Unpublish" : "Publish"}
-              </button>
-            </div>
-          ))}
-      </div>
-
-      {/* LIVE ADS TABLE */}
-      <div className="bg-white rounded-xl shadow border p-6">
-        <h2 className="text-lg font-bold text-gray-800 mb-4">
-          Live Advertisements
-        </h2>
-
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-sm">
-            <thead className="bg-gray-100 text-gray-700">
-              <tr>
-                <th className="text-left px-4 py-3">Title</th>
-                <th className="text-left px-4 py-3">Type</th>
-                <th className="text-center px-4 py-3">Status</th>
-                <th className="text-center px-4 py-3">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {liveAds.length === 0 && (
-                <tr>
-                  <td colSpan="4" className="text-center py-6 text-gray-500">
-                    No live advertisements
-                  </td>
-                </tr>
               )}
 
-              {liveAds.map((ad) => (
-                <tr key={ad.id} className="border-t">
-                  <td className="px-4 py-3 font-medium">{ad.title}</td>
-                  <td className="px-4 py-3 capitalize">{ad.type}</td>
-                  <td className="px-4 py-3 text-center">
-                    <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold">
-                      LIVE
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center justify-center gap-3">
-                      <button
-                        onClick={() => toggleAd(ad.id)}
-                        className="text-yellow-600 hover:text-yellow-700"
-                        title="Unpublish"
-                      >
-                        <FontAwesomeIcon icon={faPause} />
-                      </button>
-                      <button
-                        onClick={() => deleteAd(ad.id)}
-                        className="text-red-600 hover:text-red-700"
-                        title="Delete"
-                      >
-                        <FontAwesomeIcon icon={faTrash} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              {/* Title */}
+              <h3 className="font-semibold text-lg mb-1">
+                {modal.title}
+              </h3>
+
+              {/* Description */}
+              <p className="text-sm text-gray-500 mb-6">
+                {modal.desc}
+              </p>
+
+              {/* Publish Button */}
+              <button
+                onClick={() => publishModal(modal.key)}
+                className={`w-full py-2.5 rounded-xl flex items-center justify-center gap-2 font-medium transition-all duration-300 ${
+                  isActive
+                    ? "bg-green-600 text-white shadow-md"
+                    : "border border-gray-300 hover:bg-gray-100"
+                }`}
+              >
+                <FontAwesomeIcon
+                  icon={isActive ? faCircleCheck : faPlus}
+                />
+
+                {isActive ? "Published" : "Publish"}
+              </button>
+            </div>
+          );
+        })}
       </div>
+            <WallPostManager />
+
     </div>
   );
 }

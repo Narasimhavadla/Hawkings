@@ -3,6 +3,10 @@ import StudentsPieChart from "../utils/piechart";
 import RegistrationLineChart from "../utils/linechart";
 import { useState,useEffect } from "react";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendar, faCalendarCheck, faPen, faQuestion, faTrash, faUser, faUserGroup } from "@fortawesome/free-solid-svg-icons";
+
+
 export default function Dashboard() {
 const [totalStudents, setTotalStudents] = useState(0);
 const [totalTeachers,setTotalTeachers] = useState(0)
@@ -50,10 +54,10 @@ const api =import.meta.env.VITE_API_BASE_URL
 
       {/* KPI CARDS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-2">
-        <KpiCard title="Total Students" value={totalStudents} />
-        <KpiCard title="Tests Conducted" value={examStats.total} />
-        <KpiCard title="Active Exams" value={examStats.active} />
-        <KpiCard title="Teachers Registered" value={totalTeachers} />
+        <KpiCard title="Total Students" value={totalStudents} icon={faUser}/>
+        <KpiCard title="Total Tests" value={examStats.total} icon={faCalendar}/>
+        <KpiCard title="Active Exams" value={examStats.active} icon={faCalendarCheck}/>
+        <KpiCard title="Teachers Registered" value={totalTeachers} icon={faUserGroup}/>
       </div>
 
       {/* ROW 1: GROWTH + DISTRIBUTION */}
@@ -101,11 +105,15 @@ const api =import.meta.env.VITE_API_BASE_URL
   );
 }
 
-function KpiCard({ title, value }) {
+function KpiCard({ title, value,icon }) {
   return (
     <div className="bg-white rounded-2xl p-5 shadow">
+      
       <p className="text-sm text-gray-500">{title}</p>
-      <p className="text-2xl font-bold text-blue-600 mt-2">{value}</p>
+      <p className="text-2xl font-bold text-blue-600 mt-2">
+        <span className="text-3xl text-gray-400 mr-2"><FontAwesomeIcon icon={icon} /></span>
+        {value}
+      </p>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import { logoutUser } from "../utils/logout";
@@ -21,15 +21,23 @@ function Navbar() {
   let timeout;
 
   const navigate = useNavigate();
-  const authUser = JSON.parse(localStorage.getItem("authUser"));
+const [authUser, setAuthUser] = useState(
+  JSON.parse(localStorage.getItem("authUser"))
+);
 
   /* ================= LOGOUT ================= */
-  const handleLogout = async () => {
-    await logoutUser();
-    localStorage.removeItem("authUser");
-    localStorage.removeItem("token");
-    navigate("/", { replace: true });
-  };
+const handleLogout = async () => {
+  await logoutUser();
+
+  localStorage.removeItem("authUser");
+  localStorage.removeItem("token");
+
+  setAuthUser(null); // update navbar instantly
+
+  navigate("/", { replace: true });
+};
+
+
 
   /* ================= NAV ITEMS ================= */
   const navItems = [
@@ -44,6 +52,23 @@ function Navbar() {
     { name: "Student Feedback", path: "/stu-fb", icon: faUserGraduate },
     { name: "Parent Feedback", path: "/parent-fb", icon: faUsers }
   ];
+
+ useEffect(() => {
+  const syncAuth = () => {
+    const user = JSON.parse(localStorage.getItem("authUser"));
+    setAuthUser(user);
+  };
+
+  window.addEventListener("storage", syncAuth);
+
+  // 👇 also run once on mount
+  syncAuth();
+
+  return () => {
+    window.removeEventListener("storage", syncAuth);
+  };
+}, []);
+
 
   return (
     <nav className="sticky top-0 z-50 bg-[#1F2937]/95 backdrop-blur shadow-lg">

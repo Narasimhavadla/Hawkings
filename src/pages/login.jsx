@@ -52,7 +52,10 @@ export default function Login() {
           teacherId: user.teacherId || null,   
           activityId: user.activityId,
         })
+        
       );
+      window.dispatchEvent(new Event("storage"));
+
 
       if (user.role === "superadmin" || user.role === "admin" ) {
         navigate("/admin");

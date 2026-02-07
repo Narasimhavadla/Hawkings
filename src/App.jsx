@@ -15,11 +15,14 @@ import Books from "./pages/books";
 import StudentFeedBack from "./pages/StudentFB";
 import ParentFeedBack from "./pages/TeacherFB";
 import { logoutUser } from "./utils/logout"; 
+import useTabCloseLogout from "./utils/useTabCloseLogout";
 
 
 
 function App() {
   const navigate = useNavigate();
+
+  useTabCloseLogout();
 
   // 🔒 Prevent back navigation after logout
   useEffect(() => {
